@@ -1,0 +1,18 @@
+# Ignore temporary files
+*.tmp
+*.log
+*.swp
+*~
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore extracted PRMI files (if you don't want to commit them)
+PRMI-main-extracted/
+*.zip
+
+# Keep the PDF and text file (uncomment if you want to ignore them)
+# *.pdf
+# file.txt
+

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>A Data-Driven Image Analysis Pipeline for Plant Phenotyping in Greenhouse Environments</title>
+  <meta name="description" content="An integrated multi-spectral phenotyping framework for automated plant monitoring in controlled greenhouse environments">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="./css/normalize.css">
+  <link rel="stylesheet" href="./css/skeleton.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="./images/webicon.jpg">
+
+  <!-- Google icon
+  -------------------------------------------------- -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  <!-- Analytics
+  -------------------------------------------------- -->
+
+  <!-- Enhanced Styling -->
+  <style>
+    body {
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .container {
+        background-color: #ffffff;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .header-logo {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .header-logo img {
+        max-height: 80px;
+        max-width: 100%;
+        height: auto;
+        width: auto;
+        margin-bottom: 15px;
+        object-fit: contain;
+    }
+
+    h4 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #3498db;
+    }
+
+    h5 {
+        color: #34495e;
+        font-weight: 600;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #ecf0f1;
+    }
+
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    figure {
+        margin: 30px 0;
+        text-align: center;
+    }
+
+    figure img {
+        margin-bottom: 10px;
+    }
+
+    figure figcaption {
+        font-style: italic;
+        color: #666;
+        font-size: 0.9em;
+        margin-top: 10px;
+        text-align: center;
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .section {
+        margin-bottom: 40px;
+    }
+
+    .materials-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .material-item {
+        text-align: center;
+        flex: 0 0 calc(25% - 20px);
+        min-width: 150px;
+    }
+
+    .material-item img {
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        padding: 8px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        background-color: #fff;
+    }
+
+    .material-item img:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .material-item a {
+        text-decoration: none;
+        color: #3498db;
+        font-weight: 500;
+        display: block;
+        margin-top: 8px;
+    }
+
+    .material-item a:hover {
+        color: #2980b9;
+        text-decoration: underline;
+    }
+
+    .dataset-samples {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        margin: 30px 0;
+    }
+
+    .dataset-species {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+    }
+
+    .dataset-species h6 {
+        margin: 0 0 15px 0;
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 1.1em;
+    }
+
+    .dataset-species-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+    }
+
+    .dataset-sample {
+        text-align: center;
+    }
+
+    .dataset-sample img {
+        width: 100%;
+        max-width: 200px;
+        height: auto;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .dataset-species p {
+        font-size: 0.9em;
+        color: #666;
+        margin: 15px 0 0 0;
+    }
+
+    pre {
+        background-color: #f4f4f4;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        overflow-x: auto;
+    }
+
+    code {
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+    }
+
+    .column-50 {
+        float: left;
+        width: 50%;
+    }
+    .row-50:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    .floating-teaser {
+        float: left;
+        width: 30%;
+        text-align: center;
+        padding: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .materials-grid {
+            flex-direction: column;
+        }
+        .material-item {
+            flex: 0 0 100%;
+        }
+        .dataset-species-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .hero-section {
+        position: relative;
+        width: calc(100% + 80px);
+        min-height: 600px;
+        background-image: url('./images/Automated-precision-phenotyping-greenhouse.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: -40px -40px 40px -40px;
+        border-radius: 8px 8px 0 0;
+        padding: 40px 0;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(44, 62, 80, 0.85) 0%, rgba(52, 73, 94, 0.75) 100%);
+        border-radius: 8px 8px 0 0;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: #ffffff;
+        padding: 40px 20px;
+        max-width: 900px;
+    }
+
+    .hero-content h1 {
+        font-size: 2.2em;
+        font-weight: 700;
+        margin-bottom: 25px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        color: #ffffff;
+        line-height: 1.3;
+    }
+
+    .hero-content .authors {
+        font-size: 1em;
+        color: #ffffff;
+        margin-bottom: 15px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .hero-content .authors a {
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .hero-content .authors a:hover {
+        text-decoration: underline;
+    }
+
+    .hero-content .affiliations {
+        font-size: 0.9em;
+        color: #ecf0f1;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        line-height: 1.6;
+    }
+
+    .hero-content .correspondence {
+        font-size: 0.9em;
+        color: #ecf0f1;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .hero-materials {
+        margin-top: 30px;
+    }
+
+    .hero-materials h3 {
+        font-size: 1.3em;
+        color: #ffffff;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        font-weight: 600;
+    }
+
+    .hero-materials .materials-grid {
+        background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 25px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .hero-materials .material-item img {
+        background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-materials .material-item a {
+        color: #ffffff;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .hero-materials .material-item a:hover {
+        color: #ecf0f1;
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            min-height: auto;
+            width: calc(100% + 40px);
+            margin: -40px -20px 30px -20px;
+            padding: 20px 0;
+        }
+        .hero-content {
+            padding: 20px 15px;
+        }
+        .hero-content h1 {
+            font-size: 1.5em;
+        }
+        .hero-content .authors {
+            font-size: 0.85em;
+        }
+        .hero-content .affiliations {
+            font-size: 0.8em;
+        }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+
+        <!-- Top Logo -->
+        <div style="text-align: center; margin-bottom: 20px; padding: 20px 0;">
+            <img src="./images/logo.png" alt="Logo" style="max-height: 100px; max-width: 100%; height: auto; width: auto; object-fit: contain;">
+        </div>
+
+        <!-- Hero Section with Greenhouse Background -->
+        <div class="hero-section">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1>A Data-Driven Image Analysis Pipeline for Plant Phenotyping in Greenhouse Environments</h1>
+                
+                <div class="authors" align="center" style="margin-bottom:12px;">
+                    <a class="simple">Fahimeh Orvati Nia</a><sup>1*</sup>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="simple">Joshua Peeples</a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+                    <a class="simple">Seth Murray</a><sup>2</sup>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="simple">Nithya Subramanian</a><sup>2</sup>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="simple">Nazar Oladepo</a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="simple">Michael Morse</a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="simple">Uday Vysyaraju</a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="simple">Omar Khater</a><sup>1</sup>
+                </div>
+                
+                <div class="affiliations" align="center" style="margin-bottom:10px;">
+                    <sup>1</sup>Department of Electrical and Computer Engineering, Texas A&M University, College Station, TX, USA
+                    <span style="display:inline-block; width: 32px"></span>
+                    <sup>2</sup>Department of Soil and Crop Sciences, Texas A&M University, College Station, TX, USA
+                </div>
+                
+                <div class="correspondence" align="center" style="margin-bottom:30px;">
+                    <sup>*</sup>Correspondence: fahimehorvatinia@tamu.edu, jpeeples@tamu.edu
+                </div>
+
+                <div class="hero-materials">
+                    <h3>Materials</h3>
+                    <div class="materials-grid">
+                        <div class="material-item">
+                            <a href=""><img style="width: 100px; height: auto;" src="./images/arxivelogo.png" alt="Paper"></a>
+                            <a href="">Paper</a>
+                        </div>
+                        <div class="material-item">
+                            <a href="https://precisiongreenhouse.tamu.edu/"><img style="width: 100px; height: auto;" src="./images/DatasetLogo.png" alt="Dataset"></a>
+                            <a href="https://precisiongreenhouse.tamu.edu/">Dataset</a>
+                        </div>
+                        <div class="material-item">
+                            <a href="https://github.com/Advanced-Vision-and-Learning-Lab"><img style="width: 100px; height: auto;" src="./images/codelogo.png" alt="Code"></a>
+                            <a href="https://github.com/Advanced-Vision-and-Learning-Lab">Code</a>
+                        </div>
+                        <div class="material-item">
+                            <a href="https://huggingface.co/spaces/AVLL/Automated_Plant_Analysis_Pipeline_Demo"><img style="width: 100px; height: auto;" src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face Demo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23999%22%3EDemo%3C/text%3E%3C/svg%3E';"></a>
+                            <a href="https://huggingface.co/spaces/AVLL/Automated_Plant_Analysis_Pipeline_Demo">Hugging Face Demo</a>
+                        </div>
+                        <div class="material-item">
+                            <a href="https://plant-analysis-tool.readthedocs.io/en/latest/"><img style="width: 100px; height: auto;" src="./images/readthedocslogo.png" alt="Documentation"></a>
+                            <a href="https://plant-analysis-tool.readthedocs.io/en/latest/">Documentation</a>
+                        </div>
+                        <div class="material-item">
+                            <a href="https://www.tamu.edu/"><img style="width: 150px; height: auto;" src="./images/AgriLife_MaroonGray-RGB.webp" alt="Texas A&M AgriLife"></a>
+                            <a href="https://www.tamu.edu/">Institution</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	 		<!-- ------------------------------------- -->
+
+		
+ <div class="section">
+    <h5>Abstract</h5>
+<div id="teaser" class="container" style="width:100%; margin:0; padding:0">
+    <p align="justify">
+Advances in automation, imaging, and artificial intelligence have enabled researchers to capture large volumes of high-quality, plant data for understanding crop growth, stress, and genotype–environment interactions. While genomics has achieved remarkable throughput, phenotypic data acquisition remains a critical bottleneck for accelerating crop improvement. To address this challenge, we developed an integrated multi-spectral phenotyping framework within the Texas A&M AgriLife Precision Automated Phenotyping Greenhouse, a fully controlled facility designed for long-term, reproducible plant monitoring. The framework expands the Plant Growth and Phenotyping (PGP v2) dataset and establishes a standardized system for continuous image acquisition, segmentation, feature extraction, and temporal analysis across multiple crop species. The project was organized around five coordinated teams: Administration and Coordination, Imaging and Sensor Operations, Data Engineering, Artificial Intelligence and Analytics, and Plant Science and Discovery. This structure ensured consistent data quality, version-controlled workflows, and communication across disciplines. The analytical pipeline integrates pseudo-RGB generation, deep learning–based detection and segmentation, and temporal tracking to isolate individual plants and analyze changes in morphology, spectral reflectance, and texture over time. Beyond technical innovation, the program provides a replicable model for interdisciplinary collaboration and administrative integration in plant phenomics. The combined dataset, workflow, and management framework enable scalable, reproducible, and data-driven agricultural research that bridges engineering and biological discovery. The Texas A&M AgriLife Precision Automated Phenotyping Greenhouse is a climate-controlled research facility developed to support high-throughput plant phenotyping under reproducible environmental conditions. The greenhouse infrastructure comprises modular growth zones equipped with automated systems for regulating temperature, humidity, light intensity, and photoperiod. Environmental parameters are centrally managed through an integrated control system that enables precise scheduling and spatial uniformity across treatment groups. A robotic gantry mechanism allows for repeatable plant access along X, Y, and Z axes, facilitating non-invasive imaging and sensor deployment. Plants are arranged on stationary benching systems aligned for efficient gantry traversal. Supporting infrastructure includes a headhouse for pot preparation and sensor maintenance, as well as adjacent workstations for experiment monitoring and data review. These features enable long-term, multi-crop experiments with scalable data acquisition and robust environmental consistency.
+          </p>
+
+        </div>
+
+	 <div class="section">
+            <h5>Project Organization and Workflow Integration</h5>
+		<figure>
+		    <img src="./images/workflow.png" style="width:100%"></img>
+		    <figcaption>
+		    <strong>Figure 1:</strong> Integration of teams and responsibilities in the Texas A&M AgriLife Phenotyping Greenhouse project.
+		    </figcaption>
+		</figure>
+  </div>
+
+    <div class="section">
+            <h5>Comprehensive Phenotyping Pipeline</h5>
+    <figure>
+        <img src="./images/flow.png" style="width:100%"></img>
+        <figcaption>
+        <strong>Figure 2:</strong> Comprehensive pipeline for multispectral plant phenotyping and feature analysis.
+        </figcaption>
+    </figure>
+  </div>
+
+
+   <div class="section">
+            <h5>Plant Growth and Phenotyping Version 2 Dataset</h5>
+    <p align="justify">
+    This study introduces the expanded Plant Growth and Phenotyping Version 2 dataset (PGP v2), which substantially increases both scale and diversity from the initial release, comprising approximately 14,000 images of corn, 27,000 of cotton, 1,376 of rice, and 10,608 of sorghum, along with 1,840 manually annotated sorghum images for keypoint detection.
+    </p>
+    
+    <h6 style="margin-top: 30px; margin-bottom: 15px; color: #2c3e50;">Dataset Samples</h6>
+    <div class="dataset-samples">
+        <div class="dataset-species">
+            <h6>Corn (~14,000 images)</h6>
+            <div class="dataset-species-grid">
+                <div class="dataset-sample">
+                    <img src="./images/Corn.png" alt="Corn sample 1">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Corn2.png" alt="Corn sample 2">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Corn3.png" alt="Corn sample 3">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Corn4.png" alt="Corn sample 4">
+                </div>
+            </div>
+        </div>
+        <div class="dataset-species">
+            <h6>Cotton (~27,000 images)</h6>
+            <div class="dataset-species-grid">
+                <div class="dataset-sample">
+                    <img src="./images/Cotton.png" alt="Cotton sample 1">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Cotton2.png" alt="Cotton sample 2">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Cotton3.png" alt="Cotton sample 3">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Cotton4.png" alt="Cotton sample 4">
+                </div>
+            </div>
+        </div>
+        <div class="dataset-species">
+            <h6>Rice (~1,376 images)</h6>
+            <div class="dataset-species-grid">
+                <div class="dataset-sample">
+                    <img src="./images/Rice.png" alt="Rice sample 1">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Rice2.png" alt="Rice sample 2">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Rice3.png" alt="Rice sample 3">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Rice4.png" alt="Rice sample 4">
+                </div>
+            </div>
+        </div>
+        <div class="dataset-species">
+            <h6>Sorghum (~10,608 images)</h6>
+            <div class="dataset-species-grid">
+                <div class="dataset-sample">
+                    <img src="./images/Sorghum.png" alt="Sorghum sample 1">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Sorghum2.png" alt="Sorghum sample 2">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Sorghum3.png" alt="Sorghum sample 3">
+                </div>
+                <div class="dataset-sample">
+                    <img src="./images/Sorghum4.png" alt="Sorghum sample 4">
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  
+
+
+
+        <!-- ------------------------------------- -->
+        
+<div class="section">
+<h5>Citation</h5>
+Plain Text:
+<pre style="margin:0">
+<code>F. Orvati Nia, J. Peeples, S. C. Murray, N. Subramanian, N. Oladepo, M. Morse, U. Vysyaraju, and O. Khater. 
+"A Data-Driven Image Analysis Pipeline for Plant Phenotyping in Greenhouse Environments." 
+[Conference/Journal Name]. [Year].
+</code>
+</pre>
+
+BibTex:
+			<pre style="margin:0">
+<code>@article{orvatini2024greenhouse,
+      title={A Data-Driven Image Analysis Pipeline for Plant Phenotyping in Greenhouse Environments}, 
+      author={Fahimeh Orvati Nia and Joshua Peeples and Seth C. Murray and Nithya Subramanian 
+      and Nazar Oladepo and Michael Morse and Uday Vysyaraju and Omar Khater},
+      year={2024},
+      journal={[Journal Name]},
+      note={Texas A\&M University}
+}
+</code>
+			</pre>
+		</div>
+
+  </div>
+
+  <!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
