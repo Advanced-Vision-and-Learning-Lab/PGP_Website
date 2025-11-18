@@ -1,6 +1,6 @@
 # Plant Phenotyping Pipeline Website
 
-This website presents the research paper "A Data-Driven Image Analysis Pipeline for Plant Phenotyping in Greenhouse Environments" in a format similar to the PRMI dataset website.
+This website presents the research paper "A Data-Driven Image Analysis Pipeline for Plant Phenotyping in Greenhouse Environments".
 
 ## Structure
 
@@ -56,8 +56,3 @@ This is a static website that can be deployed to:
 - Your institution's web server
 
 Simply upload all files maintaining the directory structure.
-
-## Based On
-
-This website structure is based on the PRMI dataset website: https://gatorsense.github.io/PRMI/
-
