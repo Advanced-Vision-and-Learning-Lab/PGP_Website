@@ -1,0 +1,693 @@
+A Data-Driven Image Analysis Pipeline for Plant
+Phenotyping in Greenhouse Environments
+Fahimeh Orvati Nia1*, Joshua Peeples1
+, Seth C. Murray2
+, Andrew ?
+, Troy Vann?
+,
+Robert Hardin?
+, David Balten(check spelling)?
+, Amir Ibrahim?
+, Nithya Subramanian2
+,
+Nazar Oladepo?
+, Michael Morse1
+, Uday Vysyaraju1
+, and Omar Khater1
+1Department of Electrical and Computer Engineering, Texas A&M University, College
+Station, TX, USA
+2Department of Soil and Crop Sciences, Texas A&M University, College Station, TX,
+USA
+*Correspondence: Email: fahimehorvatinia@tamu.edu, jpeeples@tamu.edu
+Abbreviations
+AI, Artificial Intelligence; ARI, Anthocyanin Reflectance Index; BEN2, Background Erase Network; BiRefNet, Bilateral Reference Network; CNN, Convolutional Neural Network; EHD, Edge
+Histogram Descriptor; G, Green (spectral band); GNDVI, Green Normalized Difference Vegetation Index; HOG, Histogram of Oriented Gradients; L, Lacunarity; LBP, Local Binary Pattern;
+ML, Machine Learning; MSIS, Multispectral Imaging System; NIR, Near-Infrared (spectral
+band); NDVI, Normalized Difference Vegetation Index; PGP, Plant Growth and Phenotyping;
+RE, Red-Edge (spectral band); RGB, Red–Green–Blue composite image; ROI, Region of Interest; SAM, Segment Anything Model; SAM2Long, Segment Anything Model for Long Sequences;
+SDK, Software Development Kit; SVM, Support Vector Machine; YOLO, You Only Look Once
+(object detection model).
+Plain Language Summary
+Researchers at Texas A&M AgriLife monitor plants in a fully automated greenhouse that uses
+a robotic imaging system to capture detailed pictures of crops as they grow. Instead of taking
+standard color images, the system collects multi-spectral data using several wavelengths of light
+that reveal information about plant pigments, structure, and stress. This work introduces an
+automated pipeline that processes these images to identify individual plants, track their growth
+over time, and measure key traits such as height, area, shape, and color-based vegetation indices. The system uses artificial intelligence to analyze thousands of images efficiently, providing
+consistent and repeatable measurements of phenotypic traits. By combining engineering and
+plant biology, this work serves as a bridge between technology and agriculture. The results are
+envisioned to help scientists with various use cases such as detecting how different treatments or
+genetic lines influence plant growth by facilitating data-driven decisions for crop improvement
+and sustainable farming practices.
+1
+Abstract
+Advances in automation, imaging, and artificial intelligence have enabled researchers to capture
+large volumes of high-quality, plant data for understanding crop growth, stress, and genotype–environment interactions. While genomics has achieved remarkable throughput, phenotypic data acquisition remains a critical bottleneck for accelerating crop improvement. To address this challenge, we developed an integrated multi-spectral phenotyping framework within
+the Texas A&M AgriLife Precision Automated Phenotyping Greenhouse, a fully controlled facility designed for long-term, reproducible plant monitoring. The framework expands the Plant
+Growth and Phenotyping (PGP v2) dataset and establishes a standardized system for continuous image acquisition, segmentation, feature extraction, and temporal analysis across multiple
+crop species.
+The project was organized around five coordinated teams: Administration and Coordination,
+Imaging and Sensor Operations, Data Engineering, Artificial Intelligence and Analytics, and
+Plant Science and Discovery. This structure ensured consistent data quality, version-controlled
+workflows, and communication across disciplines. The analytical pipeline integrates pseudoRGB generation, deep learning–based detection and segmentation, and temporal tracking to
+isolate individual plants and analyze changes in morphology, spectral reflectance, and texture
+over time. Beyond technical innovation, the program provides a replicable model for interdisciplinary collaboration and administrative integration in plant phenomics. The combined
+dataset, workflow, and management framework enable scalable, reproducible, and data-driven
+agricultural research that bridges engineering and biological discovery.
+1 Introduction
+Significant investments in high-throughput plant phenotyping (HTP) platforms have been made
+worldwide, resulting in the deployment of advanced imaging infrastructures across North America, Europe, Asia, and Australia (Rosenqvist et al., 2019; Li et al., 2025). Nearly 200 large-scale
+phenotyping facilities are currently in operation globally (Li et al., 2025), reflecting an international commitment to data-driven crop improvement. Despite these efforts, the biological
+output from many of these platforms has remained limited when evaluated by the rate of novel
+discoveries and publication impact (Pieruschka and Schurr, 2019; Fiorani and Schurr, 2013).
+Global surveys have indicated that only a small number of platforms are field-based, and fewer
+than half operate in a genuinely high-throughput fashion (Li et al., 2025). This underperformance has frequently been attributed to an imbalance between technological investment and
+downstream data analytics, coordination, and programmatic integration (Awada et al., 2024;
+Tripodi et al., 2022). In many early initiatives, analytical workflows were constructed in a
+project-specific manner using bespoke scripts, which limited reproducibility and hindered the
+long-term scalability of the systems (Schnaufer and Pistorius, 2020). Metadata standards were
+inconsistently applied, and interoperability across institutions was seldom achieved (Papoutsoglou et al., 2020).
+To address these challenges, community-driven standardization efforts such as the Minimum
+Information About a Plant Phenotyping Experiment (MIAPPE) framework were established to
+define the minimum metadata required for describing plant phenotyping experiments, thereby
+supporting metadata uniformity, experiment documentation, and data harmonization in accor2
+dance with Findable, Accessible, Interoperable, and Reusable (FAIR) data principles (Papoutsoglou et al., 2020). It has since been recognized that scientific discovery in HTP relies equally
+on software infrastructure, computational reproducibility, and sustained interdisciplinary management (Poorter et al., 2023; Pieruschka and Schurr, 2020).
+Several large-scale collaborative initiatives have demonstrated that integrated governance
+and open-source analytical frameworks can substantially enhance the reproducibility, transparency, and scalability of phenotyping research. Notable examples include the TERRA-REF
+(Terrestrial Ecosystem Research and Reference) field phenotyping project and the EMPHASIS
+(European Infrastructure for Multi-Scale Plant Phenomics and Simulation) initiative (LeBauer
+et al., 2020; Rosenqvist et al., 2019). Both programs exemplify how multi-modal sensor data can
+be effectively managed through centralized repositories and community-facing platforms, ensuring standardized data structures, persistent metadata documentation, and public accessibility
+of analytical pipelines. These efforts have established critical precedents for the development
+of interoperable and FAIR-compliant phenomics frameworks, directly informing the design philosophy adopted in the present study.
+A complementary organizational framework has recently been established at the Texas A&M
+AgriLife Precision Automated Phenotyping Greenhouse (Texas A&M University, College Station, USA). From its inception, the program was structured to prioritize continuous coordination among plant biologists, engineers, and data scientists. Technical teams maintained
+version-controlled repositories and shared preprocessing pipelines, while plant scientists curated
+treatment metadata and experiment annotations in parallel. This integrated structure enabled
+continuous refinement of analytical tools based on feedback from biological outputs. Institutional backing was provided through Texas A&M AgriLife Research, allowing programmatic
+stability across funding cycles. Dedicated personnel were assigned to sensor calibration, environmental control, and infrastructure maintenance, ensuring uninterrupted operation of the
+imaging systems and freeing scientific staff to focus on experimental analysis. This model
+extended lessons from prior initiatives at the same institution, including a UAV-based phenotyping project that demonstrated the value of interdisciplinary planning and reproducible
+workflows (Shi et al., 2016).
+In contrast with earlier platforms characterized by siloed data workflows and fragmented
+management structures, the Texas A&M framework emphasizes transparency, shared ownership,
+and reproducible analytics. Centralized data servers and collaborative repositories have ensured
+that improvements in sensor calibration, image processing, and trait extraction are rapidly
+disseminated across teams. This approach aligns with a growing consensus that future advances
+in phenomics will depend not only on imaging technology but also on the organization and
+governance of human and computational resources (Tripodi et al., 2022; Pieruschka and Schurr,
+2020). This work presents an end-to-end automated phenotyping framework developed within
+the Texas A&M AgriLife controlled-environment greenhouse. Building on the Plant Growth and
+Phenotyping (PGP) v1 dataset (Zambre et al., 2024), the updated PGP v2 expands coverage
+to additional crops, treatments, and multispectral imaging modalities. The system integrates
+data acquisition, calibration, and feature extraction within a reproducible, modular pipeline.
+Emphasizing interoperability and interdisciplinary coordination, the framework establishes a
+scalable model for controlled-environment phenomics.
+3
+2 Materials and Methods
+2.1 Facility Overview
+The Texas A&M AgriLife Precision Automated Phenotyping Greenhouse is a climate-controlled
+research facility developed to support high-throughput plant phenotyping under reproducible
+environmental conditions. The greenhouse infrastructure comprises modular growth zones
+equipped with automated systems for regulating temperature, humidity, light intensity, and
+photoperiod. Environmental parameters are centrally managed through an integrated control system that enables precise scheduling and spatial uniformity across treatment groups. A
+robotic gantry mechanism allows for repeatable plant access along X, Y, and Z axes, facilitating non-invasive imaging and sensor deployment. Plants are arranged on stationary benching
+systems aligned for efficient gantry traversal. Supporting infrastructure includes a headhouse
+for pot preparation and sensor maintenance, as well as adjacent workstations for experiment
+monitoring and data review. These features enable long-term, multi-crop experiments with
+scalable data acquisition and robust environmental consistency.
+2.2 Project Organization and Workflow Integration
+The implementation of the multi-spectral phenotyping framework required close coordination
+among engineering and plant science teams. A modular workflow was developed in which
+each stage (data collection, preprocessing, analysis, and discovery) standardized data formats
+and shared repositories. Monthly integration meetings between AgriLife greenhouse personnel,
+software developers, and project administrators synchronized experimental protocols, imaging
+schedules, and data logging procedures, enabling version-controlled pipelines, real-time quality
+assurance, and consistent metadata documentation across crop types. To institutionalize reproducibility and support cross-project continuity, a centralized management model was adopted.
+In this model, core analytical modules were maintained by technical personnel, while domain
+scientists contributed biological validation and feedback. This structure fostered sustained interdisciplinary collaboration and aligns with the reproducibility and coordination strategies
+described in Section 4.
+Figure 1 summarizes the division of responsibilities across the program’s core operational
+teams. The phenotyping pipeline was supported by coordinated contributions across data collection, preprocessing, analysis, and discovery stages. Greenhouse technicians, imaging engineers,
+and AgriLife staff led sensor calibration and imaging logistics; data engineers and managers
+handled preprocessing and feature engineering; Artificial Intelligence (AI) researchers developed models and analytical outputs; and researchers and crop scientists interpreted phenotypic trends. These activities were orchestrated by a central coordination team responsible for
+scheduling, experimental design, and communication with stakeholders.
+4
+Figure 1: Integration of teams and responsibilities in the Texas A&M AgriLife Phenotyping
+Greenhouse project. Greenhouse operations personnel manage plant care, environmental regulation, and infrastructure maintenance. Imaging specialists oversee data acquisition, sensor
+calibration, and imaging schedules. Data preprocessing teams perform image normalization,
+segmentation, and trait isolation. Analytics teams conduct statistical evaluation and visualization. Data discovery researchers investigate trait patterns, genotype–phenotype associations,
+and emergent biological signals. The coordination team facilitates project oversight, resource
+management, and interdisciplinary communication to ensure sustained and reproducible outcomes.
+2.3 Multispectral Data Acquisition and Dataset Expansion
+Imaging was performed using the MSIS-AGRI-1-A multispectral camera (Zambre et al., 2024),
+which integrates a 4-megapixel CMOS sensor with a synchronized four-channel LED illumination system. The four spectral bands (green, 580 nm; red, 660 nm; red-edge, 735 nm; and
+near-infrared, 820 nm) were selected for their sensitivity to chlorophyll concentration, canopy
+structure, and stress-related reflectance variation. The camera captures all bands simultaneously in snapshot mode using Anti-X-TalkTM technology to minimize inter-band leakage and
+preserve spectral fidelity. Each band is stored as a separate channel within a 16-bit TIFF image of 512 × 512 pixels, providing consistent spatial resolution across modalities. The system
+operates at up to 180 frames s−1 and is controlled via a water-resistant embedded PC interface. Imaging sessions were conducted periodically between 2023 and 2025, capturing temporal
+changes in plant morphology and reflectance across developmental stages.
+This study introduces the expanded PGP version 2 dataset, which extends the initial release (Zambre et al., 2024). The original PGP v1 dataset contained 1,137 samples across corn,
+cotton, and rice. PGP v2 substantially increases both scale and diversity, comprising approximately 14,000 images of corn, 27,000 of cotton, 1,376 of rice, and 10,608 of sorghum, along
+with 1,840 manually annotated sorghum images for keypoint detection. The dataset integrates
+multispectral imagery collected over multiple sessions, with each plant represented by a vertical
+sequence of frames corresponding to different canopy heights. Data are organized hierarchically
+by species, imaging date, and frame index to facilitate temporal analysis and cross-treatment
+5
+comparison across species.
+2.4 Data Processing Pipeline
+An overview of the complete image processing pipeline is provided in Figure 2, illustrating each
+step from raw data acquisition to derived phenotypic features.
+Figure 2: Comprehensive pipeline for multispectral plant phenotyping and feature analysis.
+Data collection and acquisition of four-band multispectral images (green, red, red-edge, nearinfrared) are followed by: (a) generation of pseudo-RGB frames; (b) semantic segmentation for
+background removal and plant isolation; (c) instance segmentation for identifying and tracking individual plants; (d) feature extraction across three domains — vegetation indices (e.g.,
+NDVI, GOSAVI), texture descriptors (e.g., HOG, LBP, EHD, lacunarity), and morphological
+traits (e.g., leaf segmentation, tip detection, curvature angle); (e) statistical feature aggregation
+(e.g., mean, max, median); and (f) data analysis for temporal and treatment-based phenotypic
+interpretation.
+2.4.1 Image Preparation and Segmentation
+To ensure compatibility with computer vision models trained on natural color imagery, multispectral bands were converted to 8-bit pseudo-RGB composites. Each spectral band image
+Iλ (where λ ∈ {green,red,red-edge, near-infrared}) was first normalized to the 0–255 intensity
+range according to:
+I
+uint8
+λ = clip 
+Iλ − I
+min
+λ
+I
+max
+λ − I
+min
+λ + ε
+× 255, 0, 255
+, (1)
+where I
+min
+λ
+and I
+max
+λ
+denote the minimum and maximum pixel intensities of the spectral
+band, and ε = 10−6 prevents division by zero. The operator clip(·) constrains pixel values to
+remain within the 0–255 range, mitigating the effects of sensor noise or illumination variability.
+The resulting array is cast to unsigned 8-bit integer format (uint8) for standardized image
+representation and processing consistency.
+6
+After normalization, the spectral bands were stacked to form a pseudo-RGB composite
+I
+pseudo
+RGB , defined as:
+I
+pseudo
+RGB = concat
+I
+uint8
+green, Iuint8
+red-edge, Iuint8
+red 
+, (2)
+where concat(·) denotes channel-wise concatenation along the third dimension. Although the
+near-infrared band (I
+uint8
+nir ) is excluded from the visual composite, it remains part of the multispectral data stack for subsequent vegetation index and biophysical trait computations. This
+transformation standardizes spectral intensity distributions and enables compatibility with convolutional neural network (CNN) architectures pretrained on RGB datasets (Kattenborn et al.,
+2021). Pseudo-RGB composites preserve relative spectral contrast while allowing the use of
+transfer learning frameworks originally optimized for natural image datasets.
+Plant segmentation was performed directly on the pseudo-RGB composites using the Bilateral Reference Network (BiRefNet) (Zheng et al., 2024), a high-precision image segmentation
+framework that employs bilateral feature refinement to enhance edge localization and structural
+detail. BiRefNet effectively delineates fine canopy boundaries and narrow leaf structures while
+suppressing background artifacts. The resulting binary plant masks were subsequently mapped
+back to the original four-band data to isolate the plant region for all downstream spectral,
+textural, and morphological feature computations.
+2.4.2 Instance Tracking Across Frames
+To maintain consistent plant identities across multiple vertical imaging frames, the Segment
+Anything Model for Long Sequences (SAM2Long) framework (Ding et al., 2025) was implemented. SAM2Long extends the original Segment Anything Model (SAM) (Kirillov et al.,
+2023) by incorporating a sequence-aware transformer that links instance masks across consecutive frames while preserving spatial and temporal coherence. This framework addresses two key
+challenges inherent in sequential greenhouse imaging: (i) maintaining consistent instance segmentation when a plant appears in overlapping frames, and (ii) handling occlusion when leaves
+or stems are partially hidden due to camera angle or canopy density. By leveraging temporal
+embeddings and attention-based feature alignment, SAM2Long maintains persistent instance
+identifiers and reconstructs complete plant masks even under partial visibility. This capability
+ensures accurate aggregation of morphological and spectral traits across spatial perspectives
+and developmental stages.
+2.5 Feature Extraction Modules
+2.5.1 Vegetation Indices
+A total of 47 vegetation indices were computed from the segmented multispectral images to
+quantify plant pigment composition, canopy vigor, and structural traits. Each index was derived
+from linear or non-linear relationships among the four spectral bands (green, red, red-edge, and
+near-infrared), following the general form:
+Vegetation Indices = f(Igreen, Ired, Ired-edge, Inir), (3)
+where Iλ represents the reflectance intensity for spectral band λ. The indices were calculated
+7
+using the formulas implemented in the Sorghum Pipeline module, with all operations restricted
+to segmented plant regions. Pixel-wise vegetation index maps were generated, and summary
+statistics (mean, standard deviation, minimum, and maximum) were computed for each plant
+instance.
+Representative indices included the Normalized Difference Vegetation Index (NDVI) (Rouse Jr
+et al., 1973), Green NDVI (GNDVI) (Gitelson and Merzlyak, 1998), Normalized Difference RedEdge Index (NDRE) (Barnes et al., 2000), Anthocyanin Reflectance Index (ARI) (Gitelson et al.,
+2001), Modified Chlorophyll Absorption Ratio Index (MCARI) (Daughtry et al., 2000), and Optimized Soil-Adjusted Vegetation Index (OSAVI) (Rondeaux et al., 1996). Additional indices
+sensitive to canopy structure, water content, and physiological stress (e.g., MSAVI, TSAVI,
+CCCI, NDWI) were also implemented (Qi et al., 1994; Baret and Guyot, 1991; Gao, 1995;
+El-Shikha et al., 2008). All computations incorporated a small numerical constant ε = 10−6
+to prevent division by zero, consistent with the numerical safeguards used in the processing
+code. The complete set of 47 vegetation indices, including formulas, spectral dependencies, and
+primary references, is provided in the Additional Notes.
+2.5.2 Morphological Features
+Morphological traits were extracted using a hybrid workflow that combined the PlantCV library (Gehan et al., 2017) with supplementary OpenCV-based algorithms (?) implemented
+within the Sorghum Pipeline. This workflow quantified plant shape, structure, and architectural complexity from binary segmentation masks generated for each image. All trait calculations were restricted to plant pixels as defined by the segmentation outputs to ensure that
+background elements were excluded from analysis. Prior to measurement, binary masks were
+preprocessed using morphological opening and connected-component filtering to remove background noise and small artifacts (< 1000 pixels). For each plant, the largest connected contour
+was selected as the primary region of interest (ROI). Basic morphological descriptors were then
+computed from this ROI, including projected area, perimeter, width, height, bounding-box area,
+aspect ratio, elongation, circularity, convexity, and solidity. Convex hulls were used to estimate
+canopy compactness, while ellipse fitting provided major and minor axis lengths for geometric
+characterization.
+To capture structural topology, skeleton-based analysis was performed using PlantCV’s morphological pipeline (Gehan et al., 2017). Each plant mask was skeletonized and pruned iteratively across multiple scales to remove minor branches and preserve primary structural axes.
+The resulting skeletons were analyzed to detect branch points, tip points, and segmented objects corresponding to leaves and stems. From these topological representations, additional
+morphological traits such as number of leaves, number of stems, skeleton length, and branch
+density were derived. When PlantCV functionality was unavailable, a fallback OpenCV implementation was used to perform thinning-based skeletonization and pixel-neighborhood analysis
+for endpoint and junction detection.
+Self-supervised keypoint detection. To enhance the robustness of morphological feature
+extraction, we employed a self-supervised learning (SSL) framework for the automatic detection
+of structural keypoints such as leaf tips and branch intersections. We first used Self-Distillation
+with No Labels (DINO) (Caron et al., 2021), a self-supervised vision transformer approach, as
+8
+a pretext task to train a model on our curated PGP v2 dataset, consisting of 1,378 unlabeled
+pseudo-RGB images of sorghum plants. These images were synthesized from selected spectral
+bands and captured under controlled canopy imaging conditions. During this pretraining stage,
+the model learned structure-aware representations by aligning image patches across diverse
+instances of sorghum plants with varying genotypes, growth stages, and architectural patterns.
+This task emphasized spectral–spatial continuity, shape geometry, and fine structural cues—all
+without the use of manual labels.
+The pretrained encoder was subsequently fine-tuned for keypoint detection using the subset of publicly available Sorghum Leaf Counting Dataset (Miao et al., 2021). This dataset
+contains 27,770 cropped RGB images of sorghum plants acquired under controlled greenhouse
+conditions, accompanied by an annotation file specifying image filename, genotype identifier,
+total leaf count, and viewing angle. The dataset was designed for automated leaf counting and
+structural trait analysis in grain crops. For this stage, we employed a detection pipeline based
+on the You Only Look Once version 12 (YOLOv12) architecture (Tian et al., 2025), which integrates attention-based mechanisms for real-time object detection. The fine-tuning phase used
+896 × 896 pixel images, the AdamW optimizer (Loshchilov and Hutter, 2017), and a cosineannealing learning-rate schedule (Loshchilov and Hutter, 2016) over 100 epochs. The dataset
+was divided into 60% for training, 20% for validation, and 20% for independent testing to
+evaluate generalization performance. All model development was executed on the Texas A&M
+High Performance Research Computing (HPRC) cluster, leveraging compute nodes equipped
+with dual NVIDIA A100 (40 GB) GPUs. The resulting SSL-initialized model demonstrated
+improved localization of subtle structural features, especially under complex illumination and
+dense canopy conditions, thereby complementing morphological trait quantification derived from
+PlantCV and skeleton-based analysis.
+All measurements were converted from pixel to physical units using a geometry-derived
+calibration factor (k), defined as:
+Lcm = k × Lpx, (4)
+where Lcm and Lpx denote the length in centimeters and pixels, respectively. The calibration factor k was determined empirically for each experimental setup based on camera height,
+optical parameters, and geometric calibration procedures. All extracted morphological traits
+were archived together with diagnostic visualizations, including plant contours, skeleton overlays, and SSL-detected keypoints, to support quality assurance, reproducibility, and phenotypic
+interpretation.
+2.5.3 Texture Features
+Texture features were extracted to quantify microstructural and spatial heterogeneity in plant
+surfaces, which can reflect physiological variation such as leaf venation density, surface roughness, and canopy organization. The pipeline implemented a comprehensive texture analysis
+framework comprising four complementary descriptors: Local Binary Pattern (LBP), Histogram
+of Oriented Gradients (HOG), Lacunarity (including a Differential Box Counting variant), and
+Edge Histogram Descriptor (EHD). Each descriptor captures distinct aspects of texture geometry, contrast, and orientation.
+The Local Binary Pattern (LBP) operator (Ojala et al., 2002) encodes local contrast by
+thresholding neighborhood intensities around each pixel, producing rotation- and illumination9
+invariant maps of fine-scale surface texture. The Histogram of Oriented Gradients (HOG) (Dalal
+and Triggs, 2005) captures macroscopic structural patterns by aggregating local edge orientation
+histograms computed over overlapping spatial cells, emphasizing directional gradients associated
+with leaf edges and venation patterns.
+Lacunarity features were computed to quantify textural heterogeneity and the distribution
+of spatial gaps (Plotnick et al., 1993; Allain and Cloitre, 1991). Three lacunarity types were
+implemented: (i) local single-window lacunarity, which estimates the variance-to-mean ratio of
+pixel intensities within a fixed sliding window as defined in Equation (5) (Tolle et al., 2003);
+(ii) multi-scale averaged lacunarity, which aggregates measurements across multiple kernel sizes
+according to Equation (6) to capture hierarchical texture variation (Dong et al., 2017); and
+(iii) Differential Box Counting (DBC) Lacunarity (Mohan and Peeples, 2024), implemented as a
+PyTorch-based model following the DBC formulation for fractal texture estimation. The DBC
+model computes texture irregularity by applying local max–min pooling over sliding windows,
+estimating the lacunarity measure Lr as shown in Equation (7):
+Λ(r) = Var[M(r)]
+(E[M(r)])2
++ 1, (5)
+Λ = 1
+N
+X
+N
+i=1
+Λ(ri), (6)
+Lr =
+(M2
+r Qr)
+(MrQr + ε)
+2
+, (7)
+where Mr and Qr represent the local mean and box-count variance terms at scale r, and ε = 10−6
+prevents division by zero. This implementation enables efficient, GPU-accelerated multi-scale
+texture estimation.
+The Edge Histogram Descriptor (EHD) (Manjunath et al., 2001) quantifies the spatial distribution of edge directions by convolving images with gradient masks rotated at 45◦
+intervals.
+Directional edge responses were pooled to form histograms that describe structural anisotropy
+and leaf alignment.
+Texture features were extracted across multiple imaging domains to capture both spectral
+and structural diversity. Specifically, six image modalities were analyzed per plant instance:
+pseudo-color composite, near-infrared (NIR), red-edge, red, green, and Principal Component
+Analysis (PCA) representations. PCA was applied to the multispectral channels to produce
+orthogonal components that emphasize the dominant sources of variance while minimizing redundancy among spectral bands, as defined in Equation (8). Each grayscale band image was
+processed using the full texture feature suite, and all computations were masked to plant regions
+to exclude background noise. For each descriptor and imaging domain, pixel-level feature maps
+were summarized by statistical aggregation measures (mean, standard deviation, minimum,
+maximum, and median) to generate interpretable quantitative profiles of plant surface texture
+Z = XW, (8)
+where X represents the centered multispectral data matrix, W contains the eigenvectors of the
+covariance matrix of X, and Z denotes the resulting principal component scores that maximize
+variance along orthogonal axes.
+10
+2.6 Temporal and Statistical Analysis
+All features (i.e., vegetation indices, morphological, and texture) extracted from segmented
+plant regions were aggregated by plant identity and imaging date to construct temporal feature
+matrices. For each spectral band (green, red, red-edge, and near-infrared) and corresponding
+derived component (e.g., PCA projections and vegetation indices), statistical descriptors were
+computed to summarize the pixel-level reflectance distributions. These descriptors included the
+mean, standard deviation, minimum, maximum, median, interquartile range (25th and 75th
+percentiles), skewness, kurtosis, and Shannon entropy. Together, these metrics capture both
+central tendency and higher-order variability in spectral responses within plant tissues. Temporal aggregation across imaging sessions provided continuous profiles of each plant’s reflectance
+and morphological properties, enabling visualization of dynamic patterns in growth and canopy
+physiology. The resulting feature matrices form the basis for downstream analyses and longitudinal comparison of temporal trajectories across species, treatments, or developmental stages.
+3 Results and Discussion
+3.1 Segmentation Accuracy and Instance Tracking
+Integration of YOLO-based detection, BiRefNet segmentation, and SAM2Long instance tracking created a robust and fully automated pipeline for isolating individual plants. The comparative segmentation performance of different architectures is illustrated in Figure 3. The figure
+presents visual outputs from several state-of-the-art methods, including YOLO v8 (Jocher et al.,
+2023), SAM2.1 (Kirillov et al., 2023), BiRefNet and its dynamic variant BiRefNe Dynamic
+(Zheng et al., 2024), Background Erase Network (BEN2) (Li et al., 2024), and anintegrated
+YOLO v8 + SAM2 hybrid. BiRefNet and BiRefNet Dynamic provided the most visually accurate delineation of fine leaf structures and canopy contours, maintaining boundary sharpness
+and suppressing background interference. The combined YOLO v8 and SAM2 configuration
+also achieved consistent plant isolation by coupling object-level detection with adaptive mask
+refinement. In comparison, BEN2 tended to produce slight over-segmentation in regions with
+overlapping foliage, while standalone YOLO v8 occasionally underrepresented thin or curved
+leaf tips in complex canopy geometries. The SAM2Long framework (Ding et al., 2025) further
+extended segmentation to temporal sequences, maintaining plant identity consistency across
+vertically stacked frames. This temporal linkage enables longitudinal tracking of individual
+plants across imaging sessions and ensures reliable trait aggregation across spatial and temporal dimensions.
+11
+Figure 3: Qualitative comparison of segmentation performance across multiple models. Each
+column presents outputs for different architectures applied to multispectral plant images. Colorcoded overlays represent True Positive (TP), True Negative (TN), False Positive (FP), and
+False Negative (FN) regions, highlighting spatial agreement with manual ground-truth masks.
+Among the compared architectures, BiRefNet demonstrated the most visually accurate boundary preservation and minimal background interference, making it the most reliable model for
+fine-scale plant structure segmentation.
+3.2 Temporal Instance Tracking Performance
+To evaluate temporal consistency in instance assignment, the SAM2Long framework was applied
+to vertically stacked image sequences of individual plants (Figure 4). Unlike static segmentation approaches, SAM2Long propagates instance identifiers through time, ensuring that each
+plant maintains a stable ID across consecutive frames within the imaging stack. The presented
+example (frames f = 2–f = 9) demonstrates how the target plant, highlighted in brown, is
+consistently tracked across all frames despite variations in perspective, illumination, and partial
+occlusion. The qualitative results confirm that SAM2Long achieves reliable temporal coherence without identity drift or label switching. Neighboring plants (colored in blue and green)
+retain distinct instance IDs across the same sequence, emphasizing the framework’s robustness
+in multi-plant scenes. This level of stability is crucial for longitudinal phenotyping, enabling
+accurate linkage of structural and physiological traits across time and ensuring that growth
+dynamics are associated with the correct genotype throughout the vertical imaging sequence.
+12
+(a) f = 2 (b) f = 3 (c) f = 4 (d) f = 5 (e) f = 6 (f) f = 7 (g) f = 8 (h) f = 9
+(i) f = 2 (j) f = 3 (k) f = 4 (l) f = 5 (m) f = 6 (n) f = 7 (o) f = 8 (p) f = 9
+Figure 4: Temporal instance tracking using SAM2Long across sequential frames (f = 2–f = 9).
+Both the top and bottom rows correspond to consecutive frames within this range, visualizing
+consistent instance tracking of individual plants across time. The brown plant maintains the
+same instance ID throughout all frames in both rows, confirming stable temporal correspondence
+and identity preservation across sequential captures.
+3.3 Keypoint Detection Accuracy (Self-Supervised Learning)
+A self-supervised learning (SSL) framework based on Self-Distillation with No Labels (DINO)
+was employed to improve structural keypoint detection within the greenhouse phenotyping
+pipeline. The model was initially trained on unlabeled pseudo-RGB images to learn spatially
+aware representations through a distillation-based pretext task and subsequently fine-tuned for
+supervised keypoint detection using labeled data.
+To evaluate its effectiveness, we compared the SSL-based approach against two baselines:
+(1) a conventional supervised detector trained for bounding-box localization only, and (2) a fully
+supervised pose estimation model trained without SSL pretraining. Evaluation followed standard YOLO pose metrics, including Precision (P), Recall (R), mean Average Precision at 0.50
+IoU (mAP50), and mean Average Precision averaged across IoUs from 0.50 to 0.95 (mAP50–95).
+Metrics were computed separately for bounding-box detection (“Box”) and keypoint estimation
+(“Pose”).
+Table 1: Comparison of keypoint detection accuracy for different methods. “Box” refers to
+bounding-box detection metrics; “Pose” refers to keypoint/pose estimation metrics.
+Method Task Precision (P) Recall (R) mAP50 mAP50–95
+Baseline: supervised Box 0.45 0.43 0.42 0.21
+Baseline: supervised Pose 0.71 0.72 0.75 0.50
+DINO + fine-tuning Box 0.68 0.67 0.66 0.27
+DINO + fine-tuning Pose 0.84 0.85 0.90 0.89
+As shown in Table 1, the SSL-initialized model significantly outperformed both supervised
+baselines in keypoint detection. It achieved a precision of 84%, recall of 85%, mAP50 of 0.90,
+and mAP50–95 of 0.89, representing a 78% relative improvement in mAP50–95 over the fully
+supervised pose estimation model (0.50). Bounding-box detection remained more difficult across
+all methods, with the SSL-enhanced model reaching 0.27 mAP50–95, likely due to ambiguous
+canopy boundaries and overlapping leaf structures. These results demonstrated that pretraining
+with DINO enabled the model to learn fine-grained geometric cues, generalize better under
+13
+varying canopy architectures and illumination conditions, and achieve high accuracy with fewer
+labeled samples. Qualitative analysis further confirmed consistent localization of structural
+keypoints, which supported improved downstream estimation of morphological traits such as
+plant height, leaf count, and skeleton length.
+3.3.1 Temporal Dynamics of Extracted Features
+For each plant and imaging date, a total of 863 quantitative features were extracted, encompassing vegetation indices, spectral statistics, texture descriptors, and morphological traits.
+This comprehensive representation captures complementary aspects of plant structure and physiology, enabling multi-dimensional temporal characterization.
+Temporal profiling from December 2024 to April 2025 revealed coordinated variation across
+spectral, textural, and morphological domains, reflecting developmental progression and canopy
+maturation. Feature trajectories aggregated across imaging sessions provided a unified view of
+reflectance, texture, and geometric changes at the plant level, supporting longitudinal phenotyping of individual genotypes.
+Representative examples of these temporal trends are shown in Figure 5, including NDVI
+(Vegetation Indices), NIR-based Edge Histogram Descriptor (texture), and plant height (morphology). These complementary metrics illustrate the pipeline’s capacity to capture synchronized temporal evolution of spectral intensity, surface structure, and geometric growth patterns
+across the 863 computed features.
+14
+(a) NDVI (b) NIR EHD (Channel 3)
+(c) Plant Height
+Figure 5: Representative temporal trajectories for a single sorghum plant (Dec 2024–Apr 2025).
+(a) NDVI reflects early canopy expansion followed by late-season decline. (b) NIR-based Edge
+Histogram Descriptor (EHD) from Channel 3 captures evolving surface texture and canopy density. (c) Plant height shows rapid elongation and structural stabilization at maturity. Together,
+these profiles exemplify cross-domain consistency among spectral, textural, and morphological
+features within the 863-dimensional feature space.
+3.4 Case Study: Treatment-Dependent Phenotypic Response (LEEB Mutagenesis)
+To evaluate the practical utility of the proposed framework for real biological interpretation,
+a case study was conducted using sorghum plants subjected to Low-Energy Electron Beam
+(LEEB) mutagenesis treatments. The experiment included seven treatment groups (T1–T7)
+and a non-treated control (NT), each corresponding to distinct irradiation conditions designed
+to induce varying levels of physiological stress. The NT group received no LEEB exposure and
+served as the baseline for phenotypic comparison.
+Temporal trajectories of the Normalized Difference Vegetation Index (NDVI) were extracted
+for all groups across fourteen imaging dates (December 2024 – May 2025). As shown in Figure 6a, all treatments exhibited an initial NDVI decline during early development followed by
+partial recovery during canopy expansion. When NDVI means were normalized to the NT control (Figure 6b), the relative divergence of treated groups became evident: Group 7 (highest
+stress level) showed the largest and most sustained reduction in NDVI, while Groups 1 and 2,
+corresponding to lower exposure levels, remained closest to NT throughout the experiment. The
+progressive separation between curves indicates a dose-dependent physiological response consistent with increased pigment degradation and delayed canopy recovery under stronger mutagenic
+stress.
+The analysis demonstrates the framework’s capacity to detect subtle temporal differences in
+15
+spectral indices associated with treatment intensity. By quantifying mean ± SD trends and their
+evolution over time, the system provides an interpretable link between controlled environmental
+stress and vegetation responses. These results validate the pipeline as a high-resolution tool for
+monitoring genotype- and treatment-specific effects in controlled phenotyping environments.
+(a) NDVI mean trajectories over time for all genotype treatments (Mean ± SD, smoothed). The NT
+group maintained the highest NDVI values across
+most time points, while treated groups exhibited
+dose-dependent reductions in vegetation index intensity.
+(b) NDVI mean differences from the NT control group (Mean ± SD, smoothed). Group 7
+exhibited the largest sustained divergence, indicating the strongest physiological stress response, while lower-intensity treatments (G1–G2)
+remained close to the NT baseline.
+Figure 6: Temporal NDVI analysis for sorghum plants under LEEB mutagenesis treatments.
+(a) NDVI mean trajectories for all treatments. (b) NDVI mean differences from the NT control baseline. Together, these plots highlight dose-dependent vegetation responses and canopy
+recovery dynamics across time.
+4 Program Management, Transdisciplinary Collaboration, and
+Lessons Learned
+4.1 Challenges in Global Phenotyping Programs
+Despite substantial investment in automated phenotyping facilities worldwide—such as those in
+Australia, Belgium, the Netherlands, and the United States (University of Nebraska–Lincoln,
+University of Arizona)—the number of publications demonstrating biological discovery has remained limited relative to infrastructure cost (Fiorani and Schurr, 2013; Pieruschka and Schurr,
+2019). This gap often arises from overemphasis on imaging hardware and underinvestment in
+analytics, data integration, and cross-disciplinary management. Many facilities rely on bespoke
+analysis scripts developed for individual projects, which hinders reproducibility and long-term
+platform growth.
+4.2 A Collaborative and Sustainable Model at Texas A&M
+The Texas A&M AgriLife controlled-environment greenhouse represents a complementary model
+in which data analytics and program management are treated as central pillars of the infrastructure, rather than as downstream services. The project team established continuous interaction
+between engineers, computer vision experts, and plant scientists through weekly integration
+meetings and shared repository governance. Dedicated data engineers maintained standardized
+16
+modules for image preprocessing, segmentation, and feature extraction, while plant scientists
+curated metadata, biological treatments, and phenotype annotations. This structure ensured
+that technical updates did not disrupt ongoing biological analyses and that scientific feedback
+directly guided model refinement. Institutional commitment from both the Department of
+Electrical and Computer Engineering and the Department of Soil and Crop Sciences enabled
+sustained development across grant cycles, mitigating the common challenge of expertise loss
+when individual projects end. Administrative staff and greenhouse technicians provided operational stability, allowing researchers to focus on innovation rather than logistics.
+4.3 Comparison with Prior Models and Related Initiatives
+This management framework builds upon the philosophy successfully demonstrated in Texas
+A&M’s Unmanned Aerial Vehicle (UAS) project for high-throughput phenotyping (Shi et al.,
+2016), which emphasized interdisciplinary integration and transparent program oversight. Similar to that initiative, the current project couples technical advancement with administrative
+strategy, creating a replicable blueprint for future phenomics infrastructures. In contrast to earlier facilities that maintained separate teams for imaging, analytics, and plant science, the Texas
+A&M model promotes co-development and continuous communication. The use of versioncontrolled repositories, shared protocols, and centralized data servers ensures that algorithmic
+improvements propagate rapidly and reproducibly across projects. This approach aligns with
+the emerging view that the next frontier in plant phenomics lies not only in imaging innovation
+but also in effective management of human and computational resources.
+4.4 Lessons Learned and Broader Implications
+Several lessons emerged from the development and operation of this program:
+• Balanced investment is essential. Sustained funding for both hardware and software
+is required to translate infrastructure into discovery.
+• Early collaboration fosters efficiency. Co-design of experiments and algorithms prevents misalignment between biological needs and technical implementation.
+• Centralized coordination ensures reproducibility. A single management structure
+with clear documentation and version control prevents data fragmentation.
+• Support for early-career investigators is vital. Long-term institutional support for
+junior faculty helps build sustainable interdisciplinary ecosystems.
+• Education and training amplify impact. Integrating student researchers across disciplines not only accelerates development but also cultivates future leaders in digital agriculture.
+This collaborative and transparent management philosophy underpins the scalability and
+longevity of the Precision Greenhouse Phenotyping program. It provides a replicable example
+of how to bridge technical innovation with institutional design to advance data-driven plant
+science.
+17
+5 Conclusion
+This study introduced a comprehensive and reproducible framework for multispectral plant phenotyping within the Texas A&M AgriLife controlled-environment greenhouse. The integrated
+system combines automated imaging, advanced computer vision, and data analytics to monitor
+plant morphology and physiology through time. By merging pseudo-RGB generation, BiRefNet
+segmentation, and SAM2Long instance tracking, the framework achieves precise isolation and
+temporal tracking of individual plants. The incorporation of self-supervised keypoint detection further enhances structural interpretation, enabling accurate quantification of height, leaf
+architecture, and canopy complexity. The resulting Plant Growth and Phenotyping dataset version 2 (PGP v2) expands previous efforts by providing more than 50,000 multispectral images
+across multiple species, offering a standardized benchmark for feature extraction and model
+development.
+Beyond technical contributions, this work emphasizes the organizational and interdisciplinary foundations necessary for sustained phenomics research. Continuous coordination among
+engineering, data science, and plant biology teams enabled reproducible data management,
+transparent analysis, and biologically meaningful outcomes. Together, the integrated dataset,
+analytical modules, and collaborative management framework establish a scalable model for
+future high-throughput phenotyping initiatives. By uniting spectral, structural, and temporal
+perspectives, the presented framework advances data-driven agricultural discovery and contributes to the broader vision of intelligent, reproducible, and sustainable digital agriculture.
+Acknowledgments
+This research was supported by Texas A&M AgriLife Research and conducted within the Advanced Vision and Learning Laboratory (AVLL) at Texas A&M University. The authors thank
+Dr. Joshua Peeples for supervision and guidance throughout this project, and Dr. Nithya Subramanian and Dr. Seth C. Murray for providing access to greenhouse facilities and plant material.
+We also acknowledge contributions from the AVLL research team, including Nazar Oladepo,
+Michael Morse, Uday Vysyaraju, and Omar Khater, for assistance with model training, data
+curation, and analysis. The authors appreciate the support of the Texas A&M High Performance Research Computing (HPRC) resources used for model development and large-scale data
+processing.
+Conflict of Interest
+The authors declare no conflict of interest.
+ORCID
+Fahimeh Orvati Nia: https://orcid.org/0009-0001-5957-4872
+Nazar Oladepo: https://orcid.org/0000-0003-XXXX-XXXX
+Michael Morse: https://orcid.org/0000-0003-XXXX-XXXX
+Uday Vysyaraju: https://orcid.org/0000-0003-XXXX-XXXX
+Omar Khater: https://orcid.org/0000-0003-XXXX-XXXX
+18
+Nithya Subramanian: https://orcid.org/0000-0003-XXXX-XXXX
+Seth C. Murray: https://orcid.org/0000-0003-XXXX-XXXX
+Joshua Peeples: https://orcid.org/0000-0003-XXXX-XXXX
+Data Availability
+The multispectral plant phenotyping dataset (PGP v2) used in this study includes multispectral and pseudo-RGB imagery of corn, cotton, rice, and sorghum collected under controlled greenhouse conditions between 2022 and 2025. PGP v2 and its metadata are available through the Texas A&M AgriLife Precision Phenotyping Greenhouse Data Repository
+(https://precisiongreenhouse.tamu.edu/).
+All code for preprocessing, segmentation, and tracking is accessible via the Advanced Vision
+and Learning Laboratory GitHub repository
+(https://github.com/Advanced-Vision-and-Learning-Lab).
+References
+Allain, C. and Cloitre, M. (1991). Characterizing the lacunarity of random and deterministic
+fractal sets. Physical Review A, 44(6):3552–3558.
+Awada, L., Phillips, P. W. B., and Bodan, A. M. (2024). The evolution of plant phenomics: Global insights, trends, and collaborations (2000–2021). Frontiers in Plant Science,
+15:1410738.
+Baret, F. and Guyot, G. (1991). Potentials and limits of vegetation indices for lai and apar
+assessment. Remote sensing of environment, 35(2-3):161–173.
+Barnes, E., Clarke, T., Richards, S., Colaizzi, P., Haberland, J., Kostrzewski, M., Waller, P.,
+Choi, C., Riley, E., Thompson, T., et al. (2000). Coincident detection of crop water stress,
+nitrogen status and canopy density using ground based multispectral data. In Proceedings of
+the fifth international conference on precision agriculture, Bloomington, MN, USA, volume
+1619.
+Caron, M., Touvron, H., Misra, I., J´egou, H., Mairal, J., Bojanowski, P., and Joulin, A. (2021).
+Emerging properties in self-supervised vision transformers. In Proceedings of the IEEE/CVF
+international conference on computer vision, pages 9650–9660.
+Dalal, N. and Triggs, B. (2005). Histograms of oriented gradients for human detection. In 2005
+IEEE computer society conference on computer vision and pattern recognition (CVPR’05),
+volume 1, pages 886–893. Ieee.
+Daughtry, C. S., Walthall, C., Kim, M., De Colstoun, E. B., and McMurtrey Iii, J. (2000).
+Estimating corn leaf chlorophyll concentration from leaf and canopy reflectance. Remote
+sensing of Environment, 74(2):229–239.
+Ding, S., Qian, R., Dong, X., Zhang, P., Zang, Y., Cao, Y., Guo, Y., Lin, D., and Wang, J.
+(2025). Sam2long: Enhancing sam 2 for long video segmentation with a training-free memory
+19
+tree. In Proceedings of the IEEE/CVF International Conference on Computer Vision, pages
+13614–13624.
+Dong, H., Chen, S., Yu, C., and Zhang, L. (2017). A multi-scale lacunarity analysis method for
+texture classification. IEEE Transactions on Image Processing, 26(6):2808–2821.
+El-Shikha, D. M., Barnes, E. M., Clarke, T. R., Hunsaker, D. J., Haberland, J. A., Pinter Jr,
+P., Waller, P. M., and Thompson, T. L. (2008). Remote sensing of cotton nitrogen status
+using the canopy chlorophyll content index (ccci). Transactions of the ASABE, 51(1):73–82.
+Fiorani, F. and Schurr, U. (2013). Future scenarios for plant phenotyping. Annual Review of
+Plant Biology, 64(1):267–291.
+Gao, B.-C. (1995). Normalized difference water index for remote sensing of vegetation liquid
+water from space. In Imaging spectrometry, volume 2480, pages 225–236. SPIE.
+Gehan, M. A., Fahlgren, N., Abbasi, A., Berry, J. C., Callen, S. T., Chavez, L., Doust, A. N.,
+Feldman, M. J., Gilbert, K. B., Hodge, J. G., et al. (2017). Plantcv v2: Image analysis
+software for high-throughput plant phenotyping. PeerJ, 5:e4088.
+Gitelson, A. A., Merzlyak, M., Zur, Y., Stark, R., and Gritz, U. (2001). Non-destructive and
+remote sensing techniques for estimation of vegetation status.
+Gitelson, A. A. and Merzlyak, M. N. (1998). Remote sensing of chlorophyll concentration in
+higher plant leaves. Advances in space research, 22(5):689–692.
+Jocher, G., Chaurasia, A., and Qiu, J. (2023). Yolov8: Cutting-edge object detection and image
+segmentation models. Zenodo. Accessed: 2025-11-10.
+Kattenborn, T., Leitloff, J., Schiefer, F., and Hinz, S. (2021). Review on convolutional neural
+networks (cnn) in vegetation remote sensing. ISPRS journal of photogrammetry and remote
+sensing, 173:24–49.
+Kirillov, A., Mintun, E., Ravi, N., Mao, H., Rolland, C., Gustafson, L., Xiao, T., Whitehead,
+S., Berg, A. C., Lo, W.-Y., et al. (2023). Segment anything. In Proceedings of the IEEE/CVF
+international conference on computer vision, pages 4015–4026.
+LeBauer, D. S., Burnette, M. A., Demieville, J., Fahlgren, N., Humphreys, J., Pham, T.,
+Potnis, N., et al. (2020). Terra-ref, an open reference dataset from high-resolution genomics,
+phenomics, and imaging sensors. Zenodo. Accessed: 2025-11-08.
+Li, X., Chen, M., He, S., Xu, M., Zhao, Y., and Liu, W. (2025). An automated in-field
+transport and imaging chamber system for high-throughput phenotyping of potted soybean.
+Plant Methods, 21(1):113.
+Li, Z., Fang, W., Chen, R., and Xu, K. (2024). Ben2: Background erase network for precise
+object segmentation in complex scenes. Pattern Recognition Letters, 183:45–54.
+Loshchilov, I. and Hutter, F. (2016). Sgdr: Stochastic gradient descent with warm restarts.
+arXiv preprint arXiv:1608.03983.
+20
+Loshchilov, I. and Hutter, F. (2017). Decoupled weight decay regularization. arXiv preprint
+arXiv:1711.05101.
+Manjunath, B. S., Ohm, J.-R., Vasudevan, V. V., and Yamada, A. (2001). Color and texture
+descriptors. IEEE Transactions on circuits and systems for video technology, 11(6):703–715.
+Miao, C., Guo, A., Thompson, A. M., Yang, J., Ge, Y., and Schnable, J. C. (2021). Automation
+of leaf counting in maize and sorghum using deep learning. The Plant Phenome Journal,
+4(1):e20022.
+Mohan, A. and Peeples, J. (2024). Lacunarity pooling layers for plant image classification
+using texture analysis. In Proceedings of the IEEE/CVF Conference on Computer Vision
+and Pattern Recognition, pages 5384–5392.
+Ojala, T., Pietikainen, M., and Maenpaa, T. (2002). Multiresolution gray-scale and rotation
+invariant texture classification with local binary patterns. IEEE Transactions on pattern
+analysis and machine intelligence, 24(7):971–987.
+Papoutsoglou, E. A., Faria, D., Arend, D., Arnaud, E., Athanasiadis, I. N., Chaves, I., Coppens,
+F., Cornut, G., Costa, B. V., Finkers, R., et al. (2020). Enabling reusability of plant phenomic
+datasets with miappe 1.1. New Phytologist, 227(1):260–273.
+Pieruschka, R. and Schurr, U. (2019). Plant phenotyping: past, present, and future. Plant
+Phenomics, 2019:7507131.
+Pieruschka, R. and Schurr, U. (2020). Phenotyping platforms in plant sciences—what’s next?
+Current Opinion in Plant Biology, 54:1–4.
+Plotnick, R. E., Gardner, R. H., and O’Neill, R. V. (1993). Lacunarity indices as measures of
+landscape texture. Landscape ecology, 8(3):201–211.
+Poorter, H., Hummel, G. M., Nagel, K. A., Fiorani, F., and Pieruschka, R. (2023). Pitfalls and
+potential of high-throughput plant phenotyping platforms. Plant Phenomics, 2023:1233794.
+Qi, J., Chehbouni, A., Huete, A. R., Kerr, Y. H., and Sorooshian, S. (1994). A modified soil
+adjusted vegetation index. Remote sensing of environment, 48(2):119–126.
+Rondeaux, G., Steven, M., and Baret, F. (1996). Optimization of soil-adjusted vegetation
+indices. Remote sensing of environment, 55(2):95–107.
+Rosenqvist, E., Großkinsky, D. K., Ottosen, C.-O., and Van de Zedde, R. (2019). The phenotyping dilemma—the challenges of a diversified phenotyping community. Frontiers in Plant
+Science, 10:163.
+Rouse Jr, J., Haas, R., Schell, J., and Deering, D. (1973). Paper a 20. In Third earth resources
+technology satellite-1 symposium: The proceedings of a symposium held by Goddard space
+flight center at Washington, DC on, volume 351, page 309.
+Schnaufer, C. and Pistorius, J. L. (2020). An open, scalable, and flexible pipeline for automated aerial measurement of field experiments. In Sankaran, S. and Khot, L. R., editors,
+Autonomous Air and Ground Sensing Systems for Agricultural Optimization V, volume 11414
+of Proceedings of SPIE, page 114140A. International Society for Optics and Photonics.
+21
+Shi, Y., Thomasson, J. A., Murray, S. C., Pugh, N. A., Rooney, W. L., Shafian, S., Rajan, N.,
+Rouze, G., Morgan, C. L. S., Neely, H. L., Rana, A., Bagavathiannan, M. V., Henrickson,
+J., and Yang, C. (2016). Unmanned aerial vehicles for high-throughput phenotyping and
+agronomic research. PLOS ONE, 11(7):e0159781.
+Tian, Y., Ye, Q., and Doermann, D. (2025). Yolov12: Attention-centric real-time object detectors. arXiv preprint arXiv:2502.12524.
+Tolle, C. R., McJunkin, T. R., and Gorsich, D. J. (2003). Characterizing the lacunarity of
+hierarchical textures. Pattern Recognition, 36(1):157–164.
+Tripodi, P., Nicastro, N., and Pane, C. (2022). Digital applications and artificial intelligence in
+agriculture toward next-generation plant phenotyping. Crop & Pasture Science, 74(6):597–
+609.
+Zambre, Y. V., Rajkitkul, E., Mohan, A., and Peeples, J. (2024). Spatial transformer network
+yolo model for agricultural object detection. In 2024 International Conference on Machine
+Learning and Applications (ICMLA), pages 115–121. IEEE.
+Zheng, P., Gao, D., Fan, D.-P., Liu, L., Laaksonen, J., Ouyang, W., and Sebe, N. (2024).
+Bilateral reference for high-resolution dichotomous image segmentation. arXiv preprint
+arXiv:2401.03407.
+22
