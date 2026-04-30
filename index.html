@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+ 
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
@@ -464,7 +464,7 @@
                             <a href="https://github.com/Advanced-Vision-and-Learning-Lab">Code</a>
                         </div>
                         <div class="material-item">
-                            <a href="https://huggingface.co/spaces/AVLL/Automated_Plant_Analysis_Pipeline_Demo"><img style="width: 100px; height: auto;" src="https://huggingface.co/front/assets/huggingface_logo.svg" alt="Hugging Face"></a>
+                            <a href="https://huggingface.co/spaces/AVLL/Automated_Plant_Analysis_Pipeline_Demo"><img style="width: 100px; height: auto;" src="https://huggingface.co/front/assets/huggingface_logo-noborder.svg" alt="Hugging Face"></a>
                             <a href="https://huggingface.co/spaces/AVLL/Automated_Plant_Analysis_Pipeline_Demo">Hugging Face Demo</a>
                         </div>
                         <div class="material-item">
@@ -472,7 +472,7 @@
                             <a href="https://plant-analysis-tool.readthedocs.io/en/latest/">Documentation</a>
                         </div>
                         <div class="material-item">
-                            <a href="https://precisiongreenhouse.tamu.edu/precision-automated-phenotyping-greenhouse/"><img style="width: 150px; height: auto;" src="./images/AgriLife_MaroonGray-RGB.png" alt="Institution"></a>
+                            <a href="https://precisiongreenhouse.tamu.edu/precision-automated-phenotyping-greenhouse/"><img style="width: 150px; height: auto;" src="./images/AgriLife_MaroonGray-R.png" alt="AgriLife"></a>
                             <a href="https://precisiongreenhouse.tamu.edu/precision-automated-phenotyping-greenhouse/">Institution</a>
                         </div>
                     </div>
@@ -483,124 +483,123 @@
 
 		
  <div class="section">
-     <h5>Abstract</h5>
+      <h5>Abstract</h5>
 <div id="teaser" class="container" style="width:100%; margin:0; padding:0">
-     <p align="justify">
-Temporal imaging of plants in controlled environments helps scientists better understand growth and biological processes. However, analyzing large volumes of images has been limited by a lack of standardized, scalable, and extensible computational pipelines. To address this challenge, we have developed a comprehensive data-driven image extraction and analysis pipeline for plant phenotyping in controlled greenhouse environments. Our pipeline integrates multiple advanced techniques for multispectral image processing and feature extraction, enabling rapid and accurate analysis of plant growth dynamics across different species and growth stages. This work presents the expanded Plant Growth and Phenotyping Version 2 (PGP v2) dataset, comprising approximately 52,984 high-resolution multispectral images collected from four crop species (corn, cotton, rice, and sorghum) over their complete growth cycles in a precision automated phenotyping greenhouse. The pipeline has been validated on the PGP v2 dataset and demonstrates significant improvements in efficiency and accuracy compared to traditional manual analysis methods.
-          </p>
+      <p align="justify">
+Temporal imaging of plants in controlled environments helps scientists better understand growth and biological processes. However, analyzing large volumes of images has been limited by a lack of standardized datasets and open-source tools. This paper presents an automated multispectral image extraction and analysis pipeline coupled with the Plant Growth and Phenotyping Version 2 (PGP v2) dataset, which provides a comprehensive resource for plant phenotyping research. The pipeline is designed to streamline the workflow from raw greenhouse imaging data to extracted phenotypic traits. The PGP v2 dataset contains approximately 52,000 multispectral images from four crop species (corn, cotton, rice, and sorghum) with labeled metadata. We demonstrate the effectiveness of the proposed methodology through statistical analysis of the extracted features and present comparative analyses of multiple deep learning-based segmentation models. The proposed pipeline and dataset aim to accelerate research in plant phenotyping, facilitate reproducible science, and provide researchers with reliable tools to extract meaningful plant phenotypes from imaging data.
+           </p>
 
-         </div>
+          </div>
 
 	 <div class="section">
-             <h5>Project Organization and Workflow Integration</h5>
+              <h5>Project Organization and Workflow Integration</h5>
 		<figure>
-		    <img src="./workflow.jpg" style="width:100%"></img>
+		    <img src="./figure1 (1).png" style="width:100%"></img>
 		    <figcaption>
 		    <strong>Figure 1:</strong> Integration of teams and responsibilities in the Texas A&M AgriLife Phenotyping Greenhouse project.
 		    </figcaption>
 		</figure>
-   </div>
+    </div>
+
+      <div class="section">
+              <h5>Comprehensive Phenotyping Pipeline</h5>
+      <figure>
+          <img src="./figure3 (1).png" style="width:100%"></img>
+          <figcaption>
+          <strong>Figure 2:</strong> Comprehensive pipeline for multispectral plant phenotyping and feature analysis.
+          </figcaption>
+      </figure>
+    </div>
+
 
      <div class="section">
-             <h5>Comprehensive Phenotyping Pipeline</h5>
-     <figure>
-         <img src="./flow.png" style="width:100%"></img>
-         <figcaption>
-         <strong>Figure 2:</strong> Comprehensive pipeline for multispectral plant phenotyping and feature analysis.
-         </figcaption>
-     </figure>
-   </div>
+              <h5>Plant Growth and Phenotyping Version 2 Dataset</h5>
+      <p align="justify">
+      This study introduces the expanded Plant Growth and Phenotyping Version 2 dataset (PGP v2), which substantially increases both scale and diversity from the initial release, comprising approximately 52,000 multispectral images across four crop species. The dataset was collected in the Texas A&M AgriLife Precision Phenotyping Greenhouse and includes temporal sequences with standardized lighting, environmental controls, and imaging protocols. Each image is accompanied by comprehensive metadata including timestamp, plant genotype, growth stage, and environmental conditions. The dataset is divided into training and validation subsets to support reproducible machine learning model development and evaluation.
+      </p>
+      
+      <h6 style="margin-top: 30px; margin-bottom: 15px; color: #2c3e50;">Dataset Samples</h6>
+      <div class="dataset-samples">
+          <div class="dataset-species">
+              <h6>Corn (~14,000 images)</h6>
+              <div class="dataset-species-grid">
+                  <div class="dataset-sample">
+                      <img src="./images/Corn.png" alt="Corn sample 1">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Corn2.png" alt="Corn sample 2">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Corn3.png" alt="Corn sample 3">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Corn4.png" alt="Corn sample 4">
+                  </div>
+              </div>
+          </div>
+          <div class="dataset-species">
+              <h6>Cotton (~27,000 images)</h6>
+              <div class="dataset-species-grid">
+                  <div class="dataset-sample">
+                      <img src="./images/Cotton.png" alt="Cotton sample 1">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Cotton2.png" alt="Cotton sample 2">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Cotton3.png" alt="Cotton sample 3">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Cotton4.png" alt="Cotton sample 4">
+                  </div>
+              </div>
+          </div>
+          <div class="dataset-species">
+              <h6>Rice (~1,376 images)</h6>
+              <div class="dataset-species-grid">
+                  <div class="dataset-sample">
+                      <img src="./images/Rice.png" alt="Rice sample 1">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Rice2.png" alt="Rice sample 2">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Rice3.png" alt="Rice sample 3">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Rice4.png" alt="Rice sample 4">
+                  </div>
+              </div>
+          </div>
+          <div class="dataset-species">
+              <h6>Sorghum (~10,608 images)</h6>
+              <div class="dataset-species-grid">
+                  <div class="dataset-sample">
+                      <img src="./images/Sorghum.png" alt="Sorghum sample 1">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Sorghum2.png" alt="Sorghum sample 2">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Sorghum3.png" alt="Sorghum sample 3">
+                  </div>
+                  <div class="dataset-sample">
+                      <img src="./images/Sorghum4.png" alt="Sorghum sample 4">
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+    
 
 
-    <div class="section">
-             <h5>Plant Growth and Phenotyping Version 2 Dataset</h5>
-     <p align="justify">
-     This study introduces the expanded Plant Growth and Phenotyping Version 2 dataset (PGP v2), which substantially increases both scale and diversity from the initial release, comprising approximately 52,984 multispectral images. The dataset represents complete growth cycles for four major crop species cultivated within the Texas A&M AgriLife Precision Automated Phenotyping Greenhouse. This comprehensive collection provides researchers with high-quality, standardized data for developing and validating phenotyping algorithms and machine learning models.
-     </p>
-     
-     <h6 style="margin-top: 30px; margin-bottom: 15px; color: #2c3e50;">Dataset Samples</h6>
-     <div class="dataset-samples">
-         <div class="dataset-species">
-             <h6>Corn (~14,000 images)</h6>
-             <div class="dataset-species-grid">
-                 <div class="dataset-sample">
-                     <img src="./images/Corn.png" alt="Corn sample 1">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Corn2.png" alt="Corn sample 2">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Corn3.png" alt="Corn sample 3">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Corn4.png" alt="Corn sample 4">
-                 </div>
-             </div>
-         </div>
-         <div class="dataset-species">
-             <h6>Cotton (~27,000 images)</h6>
-             <div class="dataset-species-grid">
-                 <div class="dataset-sample">
-                     <img src="./images/Cotton.png" alt="Cotton sample 1">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Cotton2.png" alt="Cotton sample 2">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Cotton3.png" alt="Cotton sample 3">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Cotton4.png" alt="Cotton sample 4">
-                 </div>
-             </div>
-         </div>
-         <div class="dataset-species">
-             <h6>Rice (~1,376 images)</h6>
-             <div class="dataset-species-grid">
-                 <div class="dataset-sample">
-                     <img src="./images/Rice.png" alt="Rice sample 1">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Rice2.png" alt="Rice sample 2">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Rice3.png" alt="Rice sample 3">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Rice4.png" alt="Rice sample 4">
-                 </div>
-             </div>
-         </div>
-         <div class="dataset-species">
-             <h6>Sorghum (~10,608 images)</h6>
-             <div class="dataset-species-grid">
-                 <div class="dataset-sample">
-                     <img src="./images/Sorghum.png" alt="Sorghum sample 1">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Sorghum2.png" alt="Sorghum sample 2">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Sorghum3.png" alt="Sorghum sample 3">
-                 </div>
-                 <div class="dataset-sample">
-                     <img src="./images/Sorghum4.png" alt="Sorghum sample 4">
-                 </div>
-             </div>
-         </div>
-     </div>
-   </div>
-   
-
-
-
-         <!-- ------------------------------------- -->
-         
+          <!-- ------------------------------------- -->
+          
 <div class="section">
 <h5>Citation</h5>
 Plain Text:
 <pre style="margin:0">
-<code>F. Orvati Nia, J. Peeples, S. C. Murray, A. McFarland, T. Vann, S. Salehi, R. Hardin, D. D. Baltensperger, A. Ibrahim, J. A. Thomasson, H. Fadamiro, N. K. Subramanian, R. Roston, J. Ishimwe, D. Basak, N. Oladepo, and U. Vysyaraju,
+<code>F. Orvati Nia, J. Peeples, S. C. Murray, A. McFarland, T. Vann, S. Salehi, R. Hardin, D. D. Baltensperger, A. Ibrahim, J. A. Thomasson, H. Fadamiro, N. K. Subramanian, R. Roston, J. Ishimwe, D. Basak, N. Oladepo, and U. Vysyaraju. 
 "A Data-Driven Image Extraction and Analysis Pipeline for Plant Phenotyping in Controlled Environments." 
 bioRxiv, 2026.
 </code>
