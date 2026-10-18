@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   
+
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
   <title>A Data-Driven Image Extraction and Analysis Pipeline for Plant Phenotyping in Controlled Environments</title>
-  <meta name="description" content="An automated multispectral image extraction and analysis pipeline for plant phenotyping in controlled environments">
-  <meta name="author" content="">
+  <meta name="description" content="An automated multispectral image extraction and analysis pipeline for plant phenotyping in controlled environments (The Plant Phenome Journal, 2026)">
+  <meta name="author" content="Fahimeh Orvati Nia, Joshua Peeples">
 
   <!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -15,7 +15,7 @@
 
   <!-- FONT
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,700" rel="stylesheet" type="text/css">
 
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -24,17 +24,25 @@
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href="./images/webicon.jpg">
+  <link rel="icon" type="image/jpeg" href="./images/TPPJ.jpg">
 
   <!-- Google icon
   -------------------------------------------------- -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-  <!-- Analytics
-  -------------------------------------------------- -->
-
   <!-- Enhanced Styling -->
   <style>
+    :root {
+        --maroon: #500000;
+        --ink: #2c3e50;
+        --accent: #3498db;
+    }
+
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
     body {
         background-color: #f8f9fa;
         color: #333;
@@ -43,58 +51,211 @@
         padding: 0;
     }
 
+    /* ---------- Top logo bar: slim, centered, never wider than the content ---------- */
+    .top-logo-banner {
+        width: 100%;
+        background-color: #ffffff;
+        border-bottom: 3px solid var(--maroon);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        padding: 12px 24px;
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    .top-logo-banner img {
+        display: inline-block;
+        width: auto;
+        height: auto;
+        max-width: min(880px, 100%);
+        max-height: 70px;
+        margin: 0 auto;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* ---------- Hero: full-bleed greenhouse photo ---------- */
+    .hero-section {
+        position: relative;
+        width: 100%;
+        min-height: 78vh;
+        background-image: url('./images/Automated-precision-phenotyping-greenhouse.jpg');
+        background-size: cover;
+        background-position: center 40%;
+        background-repeat: no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 56px 24px 64px;
+        box-sizing: border-box;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(24, 34, 48, 0.58) 0%, rgba(24, 34, 48, 0.72) 60%, rgba(24, 34, 48, 0.86) 100%);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: #ffffff;
+        max-width: 1100px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .hero-content h1 {
+        font-size: 2.6em;
+        font-weight: 700;
+        line-height: 1.25;
+        margin: 0 auto 18px;
+        max-width: 1000px;
+        color: #ffffff;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.45);
+    }
+
+    .hero-content .venue {
+        display: inline-block;
+        font-size: 0.95em;
+        letter-spacing: 0.02em;
+        color: #ffffff;
+        background: rgba(255,255,255,0.14);
+        border: 1px solid rgba(255,255,255,0.35);
+        border-radius: 999px;
+        padding: 6px 16px;
+        margin-bottom: 26px;
+        text-decoration: none;
+        backdrop-filter: blur(6px);
+    }
+
+    .hero-content .venue:hover {
+        background: rgba(255,255,255,0.24);
+    }
+
+    .hero-content .authors {
+        font-size: 1.05em;
+        line-height: 1.8;
+        color: #ffffff;
+        margin-bottom: 18px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .hero-content .authors a {
+        color: #ffffff;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .hero-content .authors sup {
+        font-size: 0.7em;
+    }
+
+    .hero-content .affiliations {
+        font-size: 0.9em;
+        color: #eef2f5;
+        line-height: 1.7;
+        margin-bottom: 14px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .hero-content .correspondence {
+        font-size: 0.9em;
+        color: #eef2f5;
+        margin-bottom: 34px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .hero-content .correspondence a {
+        color: #ffffff;
+    }
+
+    /* ---------- Materials: six uniform tiles ---------- */
+    .hero-materials h3 {
+        font-size: 1.35em;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 18px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .materials-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 22px 28px;
+        padding: 26px 22px;
+        background-color: rgba(255, 255, 255, 0.10);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 12px;
+    }
+
+    .material-item {
+        flex: 0 0 128px;
+        text-align: center;
+    }
+
+    .material-item a {
+        display: block;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: 500;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .material-item .tile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 128px;
+        height: 100px;
+        margin: 0 auto 10px;
+        padding: 12px;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+        transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .material-item a:hover .tile {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.30);
+    }
+
+    .material-item .tile img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        margin: 0;
+        border-radius: 6px;
+        box-shadow: none;
+    }
+
+    .material-item a:hover .label {
+        text-decoration: underline;
+    }
+
+    /* ---------- Body content card ---------- */
     .container {
         background-color: #ffffff;
         padding: 40px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    .header-logo {
-        text-align: center;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 2px solid #e9ecef;
-    }
-
-    .header-logo img {
-        max-height: 80px;
-        max-width: 100%;
-        height: auto;
-        width: auto;
-        margin-bottom: 15px;
-        object-fit: contain;
-    }
-
-    .top-logo-banner {
-        width: 100%;
-        background-color: #ffffff;
-        padding: 20px 0;
-        text-align: center;
-        border-bottom: 2px solid #e9ecef;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin: 0;
-    }
-
-    .top-logo-banner img {
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-        object-fit: contain;
-        display: block;
-        margin: 0 auto;
-        padding: 0 40px;
-        box-shadow: none;
+        margin-top: -36px;
+        margin-bottom: 40px;
+        position: relative;
+        z-index: 2;
     }
 
     h4 {
-        color: #2c3e50;
+        color: var(--ink);
         font-weight: 600;
         margin-bottom: 25px;
         padding-bottom: 15px;
-        border-bottom: 3px solid #3498db;
+        border-bottom: 3px solid var(--accent);
     }
 
     h5 {
@@ -106,12 +267,18 @@
         border-bottom: 2px solid #ecf0f1;
     }
 
+    .section:first-child h5 {
+        margin-top: 0;
+    }
+
     img {
         display: block;
         margin-left: auto;
         margin-right: auto;
         border-radius: 4px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        max-width: 100%;
+        height: auto;
     }
 
     figure {
@@ -138,46 +305,6 @@
         margin-bottom: 40px;
     }
 
-    .materials-grid {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
-        margin: 30px 0;
-    }
-
-    .material-item {
-        text-align: center;
-        flex: 0 0 calc(25% - 20px);
-        min-width: 150px;
-    }
-
-    .material-item img {
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        padding: 8px;
-        transition: transform 0.3s, box-shadow 0.3s;
-        background-color: #fff;
-    }
-
-    .material-item img:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .material-item a {
-        text-decoration: none;
-        color: #3498db;
-        font-weight: 500;
-        display: block;
-        margin-top: 8px;
-    }
-
-    .material-item a:hover {
-        color: #2980b9;
-        text-decoration: underline;
-    }
-
     .dataset-samples {
         display: flex;
         flex-direction: column;
@@ -194,7 +321,7 @@
 
     .dataset-species h6 {
         margin: 0 0 15px 0;
-        color: #2c3e50;
+        color: var(--ink);
         font-weight: 600;
         font-size: 1.1em;
     }
@@ -223,12 +350,20 @@
         margin: 15px 0 0 0;
     }
 
+    .citation-label {
+        font-weight: 600;
+        color: var(--ink);
+        margin: 18px 0 6px;
+    }
+
     pre {
         background-color: #f4f4f4;
         border: 1px solid #ddd;
         border-radius: 4px;
         padding: 15px;
         overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-word;
     }
 
     code {
@@ -236,255 +371,174 @@
         font-size: 0.9em;
     }
 
-    .column-50 {
-        float: left;
-        width: 50%;
-    }
-    .row-50:after {
-        content: "";
-        display: table;
-        clear: both;
+    .site-footer {
+        text-align: center;
+        color: #777;
+        font-size: 0.85em;
+        padding: 10px 16px 30px;
     }
 
-    .floating-teaser {
-        float: left;
-        width: 30%;
-        text-align: center;
-        padding: 15px;
+    .site-footer a {
+        color: #555;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 900px) {
+        .hero-content h1 {
+            font-size: 2em;
+        }
     }
 
     @media (max-width: 768px) {
+        .top-logo-banner {
+            padding: 10px 16px;
+        }
+        .top-logo-banner img {
+            max-height: 52px;
+        }
+        p[align="justify"] {
+            text-align: left;
+        }
+        .hero-section {
+            min-height: auto;
+            padding: 36px 16px 48px;
+        }
+        .hero-content h1 {
+            font-size: 1.55em;
+        }
+        .hero-content .authors {
+            font-size: 0.9em;
+            line-height: 1.7;
+        }
+        .hero-content .affiliations,
+        .hero-content .correspondence {
+            font-size: 0.8em;
+        }
         .materials-grid {
-            flex-direction: column;
+            gap: 16px 14px;
+            padding: 18px 10px;
         }
         .material-item {
-            flex: 0 0 100%;
+            flex: 0 0 96px;
+            font-size: 0.85em;
+        }
+        .material-item .tile {
+            width: 96px;
+            height: 78px;
+            padding: 9px;
+        }
+        .container {
+            padding: 24px 18px;
+            margin-top: -20px;
         }
         .dataset-species-grid {
             grid-template-columns: repeat(2, 1fr);
         }
     }
-
-    .hero-section {
-        position: relative;
-        width: calc(100% + 80px);
-        min-height: 600px;
-        background-image: url('./images/Automated-precision-phenotyping-greenhouse.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: -40px -40px 40px -40px;
-        border-radius: 8px 8px 0 0;
-        padding: 40px 0;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(44, 62, 80, 0.85) 0%, rgba(52, 73, 94, 0.75) 100%);
-        border-radius: 8px 8px 0 0;
-    }
-
-    .hero-content {
-        position: relative;
-        z-index: 1;
-        text-align: center;
-        color: #ffffff;
-        padding: 40px 20px;
-        max-width: 900px;
-    }
-
-    .hero-content h1 {
-        font-size: 2.2em;
-        font-weight: 700;
-        margin-bottom: 25px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        color: #ffffff;
-        line-height: 1.3;
-    }
-
-    .hero-content .authors {
-        font-size: 1em;
-        color: #ffffff;
-        margin-bottom: 15px;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    }
-
-    .hero-content .authors a {
-        color: #ffffff;
-        text-decoration: none;
-    }
-
-    .hero-content .authors a:hover {
-        text-decoration: underline;
-    }
-
-    .hero-content .affiliations {
-        font-size: 0.9em;
-        color: #ecf0f1;
-        margin-bottom: 20px;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-        line-height: 1.6;
-    }
-
-    .hero-content .correspondence {
-        font-size: 0.9em;
-        color: #ecf0f1;
-        margin-bottom: 30px;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-    }
-
-    .hero-materials {
-        margin-top: 30px;
-    }
-
-    .hero-materials h3 {
-        font-size: 1.3em;
-        color: #ffffff;
-        margin-bottom: 20px;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-        font-weight: 600;
-    }
-
-    .hero-materials .materials-grid {
-        background-color: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        padding: 25px;
-        border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .hero-materials .material-item img {
-        background-color: rgba(255, 255, 255, 0.9);
-    }
-
-    .hero-materials .material-item a {
-        color: #ffffff;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-
-    .hero-materials .material-item a:hover {
-        color: #ecf0f1;
-    }
-
-    @media (max-width: 768px) {
-        .hero-section {
-            min-height: auto;
-            width: calc(100% + 40px);
-            margin: -40px -20px 30px -20px;
-            padding: 20px 0;
-        }
-        .hero-content {
-            padding: 20px 15px;
-        }
-        .hero-content h1 {
-            font-size: 1.5em;
-        }
-        .hero-content .authors {
-            font-size: 0.85em;
-        }
-        .hero-content .affiliations {
-            font-size: 0.8em;
-        }
-    }
-
   </style>
 </head>
 <body>
 
+  <!-- Top Texas A&M Logo Banner -->
+  <div class="top-logo-banner">
+      <img src="./images/logo.png" alt="Texas A&amp;M Engineering Experiment Station, Texas A&amp;M AgriLife Research Plant Growth and Phenotyping Facility, and Department of Electrical &amp; Computer Engineering">
+  </div>
+
+  <!-- Hero Section with Greenhouse Background (full width) -->
+  <section class="hero-section">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+          <h1>A Data-Driven Image Extraction and Analysis Pipeline for Plant Phenotyping in Controlled Environments</h1>
+
+          <a class="venue" href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/ppj2.70116">Published in <em>The Plant Phenome Journal</em>, 2026 &middot; doi:10.1002/ppj2.70116</a>
+
+          <div class="authors">
+              <a class="simple">Fahimeh Orvati Nia</a><sup>1*</sup>,&nbsp;
+              <a class="simple">Joshua Peeples</a><sup>1*</sup>,&nbsp;
+              <a class="simple">Seth C. Murray</a><sup>2</sup>,&nbsp;
+              <a class="simple">Andrew McFarland</a><sup>3</sup>,&nbsp;
+              <a class="simple">Troy Vann</a><sup>3</sup>,&nbsp;
+              <a class="simple">Shima Salehi</a><sup>1</sup>,&nbsp;
+              <a class="simple">Robert Hardin</a><sup>4</sup>,&nbsp;
+              <a class="simple">David D. Baltensperger</a><sup>2</sup>,&nbsp;
+              <a class="simple">Amir M. H. Ibrahim</a><sup>3</sup>,&nbsp;
+              <a class="simple">J. Alex Thomasson</a><sup>5</sup>,&nbsp;
+              <a class="simple">Henry Fadamiro</a><sup>6</sup>,&nbsp;
+              <a class="simple">Nithya K. Subramanian</a><sup>2</sup>,&nbsp;
+              <a class="simple">Suresh D. Pillai</a><sup>7</sup>,&nbsp;
+              <a class="simple">Rebecca Roston</a><sup>8</sup>,&nbsp;
+              <a class="simple">Joslin Ishimwe</a><sup>8</sup>,&nbsp;
+              <a class="simple">Diptadeep Basak</a><sup>8</sup>,&nbsp;
+              <a class="simple">Nazar Oladepo</a><sup>1</sup>,&nbsp;and&nbsp;
+              <a class="simple">Uday Vysyaraju</a><sup>1</sup>
+          </div>
+
+          <div class="affiliations">
+              <sup>1</sup>Department of Electrical and Computer Engineering, Texas A&amp;M University, College Station, TX, USA<br/>
+              <sup>2</sup>Department of Soil and Crop Sciences, Texas A&amp;M University, College Station, TX, USA<br/>
+              <sup>3</sup>Texas A&amp;M AgriLife Research, Texas A&amp;M University, College Station, TX, USA<br/>
+              <sup>4</sup>Department of Biological and Agricultural Engineering, Texas A&amp;M University, College Station, TX, USA<br/>
+              <sup>5</sup>Department of Agricultural and Biological Engineering, Mississippi State University, Mississippi State, MS, USA<br/>
+              <sup>6</sup>Department of Entomology, Texas A&amp;M University, College Station, TX, USA<br/>
+              <sup>7</sup>National Center for Electron Beam Research, Texas A&amp;M University, College Station, TX, USA<br/>
+              <sup>8</sup>Department of Biochemistry, University of Nebraska&ndash;Lincoln, Lincoln, NE, USA
+          </div>
+
+          <div class="correspondence">
+              <sup>*</sup>Correspondence: <a href="mailto:fahimehorvatinia@tamu.edu">fahimehorvatinia@tamu.edu</a>, <a href="mailto:jpeeples@tamu.edu">jpeeples@tamu.edu</a>
+          </div>
+
+          <div class="hero-materials">
+              <h3>Materials</h3>
+              <div class="materials-grid">
+                  <div class="material-item">
+                      <a href="https://acsess.onlinelibrary.wiley.com/doi/10.1002/ppj2.70116">
+                          <span class="tile"><img src="./images/TPPJ.jpg" alt="The Plant Phenome Journal"></span>
+                          <span class="label">Paper</span>
+                      </a>
+                  </div>
+                  <div class="material-item">
+                      <a href="https://huggingface.co/datasets/AVLL/PGP_v2">
+                          <span class="tile"><img src="./images/DatasetLogo.png" alt="Dataset"></span>
+                          <span class="label">Dataset</span>
+                      </a>
+                  </div>
+                  <div class="material-item">
+                      <a href="https://github.com/Advanced-Vision-and-Learning-Lab/Plant_Analysis_Tool_Pipeline">
+                          <span class="tile"><img src="./images/codelogo.png" alt="Code"></span>
+                          <span class="label">Code</span>
+                      </a>
+                  </div>
+                  <div class="material-item">
+                      <a href="https://huggingface.co/spaces/AVLL/Automated_Plant_Analysis_Pipeline_Demo">
+                          <span class="tile"><img src="./images/hf-logo.svg" alt="Hugging Face"></span>
+                          <span class="label">Hugging Face Demo</span>
+                      </a>
+                  </div>
+                  <div class="material-item">
+                      <a href="https://plant-analysis-tool.readthedocs.io/en/latest/">
+                          <span class="tile"><img src="./images/readthedocslogo.png" alt="Read the Docs"></span>
+                          <span class="label">Documentation</span>
+                      </a>
+                  </div>
+                  <div class="material-item">
+                      <a href="https://precisiongreenhouse.tamu.edu/precision-automated-phenotyping-greenhouse/">
+                          <span class="tile"><img src="./images/AgriLife_MaroonGray-RGB.webp" alt="Texas A&amp;M AgriLife"></span>
+                          <span class="label">Institution</span>
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-    
-        <!-- Top Texas A&M Logo Banner -->
-        <div class="top-logo-banner">
-            <img src="./images/logo.png" alt="Texas A&M Logo">
-        </div>
-
   <div class="container">
 
-        <!-- Hero Section with Greenhouse Background -->
-        <div class="hero-section">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <h1>A Data-Driven Image Extraction and Analysis Pipeline for Plant Phenotyping in Controlled Environments</h1>
-                
-                <div class="authors" align="center" style="margin-bottom:12px;">
-                    <a class="simple">Fahimeh Orvati Nia</a><sup>1*</sup>,&nbsp;
-                    <a class="simple">Joshua Peeples</a><sup>1*</sup>,&nbsp;
-                    <a class="simple">Seth C. Murray</a><sup>2</sup>,&nbsp;
-                    <a class="simple">Andrew McFarland</a><sup>3</sup>,&nbsp;
-                    <a class="simple">Troy Vann</a><sup>3</sup>,&nbsp;
-                    <a class="simple">Shima Salehi</a><sup>1</sup>,&nbsp;
-                    <a class="simple">Robert Hardin</a><sup>4</sup>,&nbsp;
-                    <a class="simple">David D. Baltensperger</a><sup>2</sup>,&nbsp;
-                    <a class="simple">Amir Ibrahim</a><sup>3</sup>,&nbsp;
-                    <a class="simple">J. Alex Thomasson</a><sup>5</sup>,&nbsp;
-                    <a class="simple">Henry Fadamiro</a><sup>6</sup>,&nbsp;
-                    <a class="simple">Nithya K Subramanian</a><sup>2</sup>,&nbsp;
-                    <a class="simple">Rebecca Roston</a><sup>7</sup>,&nbsp;
-                    <a class="simple">Joslin Ishimwe</a><sup>7</sup>,&nbsp;
-                    <a class="simple">Diptadeep Basak</a><sup>7</sup>,&nbsp;
-                    <a class="simple">Nazar Oladepo</a><sup>1</sup>,&nbsp;and&nbsp;
-                    <a class="simple">Uday Vysyaraju</a><sup>1</sup>
-                </div>
-                
-                <div class="affiliations" align="center" style="margin-bottom:10px;">
-                    <sup>1</sup>Department of Electrical and Computer Engineering, Texas A&amp;M University, College Station, TX, USA<br/>
-                    <sup>2</sup>Department of Soil and Crop Sciences, Texas A&amp;M University, College Station, TX, USA<br/>
-                    <sup>3</sup>Texas A&amp;M AgriLife Research, Texas A&amp;M University, College Station, TX, USA<br/>
-                    <sup>4</sup>Department of Biological and Agricultural Engineering, Texas A&amp;M University, College Station, TX, USA<br/>
-                    <sup>5</sup>Department of Agricultural and Biological Engineering, Mississippi State University, Mississippi State, MS, USA<br/>
-                    <sup>6</sup>Department of Entomology, Texas A&amp;M University, College Station, TX, USA<br/>
-                    <sup>7</sup>Department of Biochemistry, University of Nebraska–Lincoln, Lincoln, NE, USA
-                </div>
-                
-                <div class="correspondence" align="center" style="margin-bottom:30px;">
-                    <sup>*</sup>Correspondence email: fahimehorvatinia@tamu.edu, jpeeples@tamu.edu
-                </div>
-
-                <div class="hero-materials">
-                    <h3>Materials</h3>
-                    <div class="materials-grid">
-                        <div class="material-item">
-                            <a href="https://www.biorxiv.org/content/10.64898/2026.02.25.707797v1.abstract"><img style="width: 100px; height: auto;" src="./bioarxivlogo.png" alt="bioRxiv Paper"></a>
-                            <a href="https://www.biorxiv.org/content/10.64898/2026.02.25.707797v1.abstract">Paper</a>
-                        </div>
-                        <div class="material-item">
-                            <a href="https://huggingface.co/datasets/AVLL/PGP_v2"><img style="width: 100px; height: auto;" src="./images/DatasetLogo.png" alt="Dataset"></a>
-                            <a href="https://huggingface.co/datasets/AVLL/PGP_v2">Dataset</a>
-                        </div>
-                        <div class="material-item">
-                            <a href="https://github.com/Advanced-Vision-and-Learning-Lab/Plant_Analysis_Tool_Pipeline"><img style="width: 100px; height: auto;" src="./images/codelogo.png" alt="Code"></a>
-                            <a href="https://github.com/Advanced-Vision-and-Learning-Lab/Plant_Analysis_Tool_Pipeline">Code</a>
-                        </div>
-                        <div class="material-item">
-                            <a href="https://huggingface.co/spaces/AVLL/Automated_Plant_Analysis_Pipeline_Demo"><img style="width: 100px; height: auto;" src="https://huggingface.co/front/assets/hf-logo.svg" alt="Hugging Face Demo"></a>
-                            <a href="https://huggingface.co/spaces/AVLL/Automated_Plant_Analysis_Pipeline_Demo">Hugging Face Demo</a>
-                        </div>
-                        <div class="material-item">
-                            <a href="https://plant-analysis-tool.readthedocs.io/en/latest/"><img style="width: 100px; height: auto;" src="./images/readthedocslogo.png" alt="Documentation"></a>
-                            <a href="https://plant-analysis-tool.readthedocs.io/en/latest/">Documentation</a>
-                        </div>
-                        <div class="material-item">
-                            <a href="https://precisiongreenhouse.tamu.edu/precision-automated-phenotyping-greenhouse/"><img style="width: 150px; height: auto;" src="./images/AgriLife_MaroonGray-RGB.jpg" alt="Institution"></a>
-                            <a href="https://precisiongreenhouse.tamu.edu/precision-automated-phenotyping-greenhouse/">Institution</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-  		<!-- ------------------------------------- -->
-
-        
-  <div class="section">
+<div class="section">
        <h5>Abstract</h5>
-<div id="teaser" class="container" style="width:100%; margin:0; padding:0">
+<div id="teaser">
        <p align="justify">
  Temporal imaging of plants in controlled environments helps scientists better understand growth and biological processes. However, analyzing large volumes of images has been limited by a lack of accessible, standardized datasets and automated analytical tools. This website presents a comprehensive dataset and analysis pipeline for plant phenotyping. The system integrates image acquisition, segmentation, feature extraction, and interpretation to support high-throughput phenotyping in greenhouse settings. The dataset includes multiple plant species and developmental stages, enabling researchers to benchmark detection and trait estimation approaches at scale.
             </p>
@@ -494,7 +548,7 @@
    	 <div class="section">
                 <h5>Project Organization and Workflow Integration</h5>
   		<figure>
-  		    <img src="./figure1 (1).png" style="width:100%"></img>
+  		    <img src="./figure1 (1).png" style="width:100%">
   		    <figcaption>
   		    <strong>Figure 1:</strong> Integration of teams and responsibilities in the Texas A&M AgriLife Phenotyping Greenhouse project.
   		    </figcaption>
@@ -504,7 +558,7 @@
         <div class="section">
                 <h5>Comprehensive Phenotyping Pipeline</h5>
         <figure>
-            <img src="./figure3 (1).png" style="width:100%"></img>
+            <img src="./figure3 (1).png" style="width:100%">
             <figcaption>
             <strong>Figure 2:</strong> Comprehensive pipeline for multispectral plant phenotyping and feature analysis.
             </figcaption>
@@ -596,26 +650,35 @@
             
 <div class="section">
 <h5>Citation</h5>
-Plain Text:
+<div class="citation-label">Plain Text (APA):</div>
 <pre style="margin:0">
-<code>F. Orvati Nia, J. Peeples, S. C. Murray, A. McFarland, T. Vann, S. Salehi, R. Hardin, D. D. Baltensperger, A. Ibrahim, J. A. Thomasson, H. Fadamiro, N. K. Subramanian, R. Roston, J. Ishimwe, D. Basak, N. Oladepo, and U. Vysyaraju. A Data-Driven Image Extraction and Analysis Pipeline for Plant Phenotyping in Controlled Environments. bioRxiv, 2026.</code>
+<code>Nia, F. O., Peeples, J., Murray, S. C., McFarland, A., Vann, T., Salehi, S., Hardin, R., Baltensperger, D. D., Ibrahim, A. M. H., Thomasson, J. A., Fadamiro, H., Subramanian, N. K., Pillai, S. D., Roston, R., Ishimwe, J., Basak, D., Oladepo, N., &amp; Vysyaraju, U. (2026). A data-driven image extraction and analysis pipeline for plant phenotyping in controlled environments. The Plant Phenome Journal, 9, e70116. https://doi.org/10.1002/ppj2.70116</code>
 </pre>
 
-BibTex:
-			<pre style="margin:0">
-<code>@article{orvati2026data,
-  title={A Data-Driven Image Extraction and Analysis Pipeline for Plant Phenotyping in Controlled Environments},
-  author={Orvati Nia, Fahimeh and Peeples, Joshua and Murray, Seth C and McFarland, Andrew and Vann, Troy and Salehi, Shima and Hardin, Robert and Baltensperger, David D and Ibrahim, Amir and Thomasson, J Alex and Fadamiro, Henry and Subramanian, Nithya K and Roston, Rebecca and Ishimwe, Joslin and Basak, Diptadeep and Oladepo, Nazar and Vysyaraju, Uday},
-  journal={bioRxiv},
-  pages={2026--02},
-  year={2026},
-  publisher={Cold Spring Harbor Laboratory}
+<div class="citation-label">BibTeX:</div>
+<pre style="margin:0">
+<code>@article{nia2026datadriven,
+  title     = {A data-driven image extraction and analysis pipeline for plant phenotyping in controlled environments},
+  author    = {Nia, Fahimeh Orvati and Peeples, Joshua and Murray, Seth C. and McFarland, Andrew and Vann, Troy and Salehi, Shima and Hardin, Robert and Baltensperger, David D. and Ibrahim, Amir M. H. and Thomasson, J. Alex and Fadamiro, Henry and Subramanian, Nithya K. and Pillai, Suresh D. and Roston, Rebecca and Ishimwe, Joslin and Basak, Diptadeep and Oladepo, Nazar and Vysyaraju, Uday},
+  journal   = {The Plant Phenome Journal},
+  volume    = {9},
+  number    = {1},
+  pages     = {e70116},
+  year      = {2026},
+  publisher = {Wiley},
+  doi       = {10.1002/ppj2.70116},
+  url       = {https://doi.org/10.1002/ppj2.70116}
 }
 </code>
-			</pre>
-		</div>
+</pre>
+</div>
 
   </div>
+
+  <footer class="site-footer">
+      &copy; 2026 Advanced Vision and Learning Lab, Texas A&amp;M University &middot;
+      <a href="https://github.com/Advanced-Vision-and-Learning-Lab/PGP_Website">Website source</a>
+  </footer>
 
   <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
