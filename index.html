@@ -77,7 +77,7 @@
     .hero-section {
         position: relative;
         width: 100%;
-        min-height: 78vh;
+        min-height: 560px;
         background-image: url('./images/Automated-precision-phenotyping-greenhouse.jpg');
         background-size: cover;
         background-position: center 40%;
@@ -100,7 +100,7 @@
         z-index: 1;
         text-align: center;
         color: #ffffff;
-        max-width: 1100px;
+        max-width: 1250px;
         width: 100%;
         margin: 0 auto;
     }
@@ -239,15 +239,17 @@
     }
 
     /* ---------- Body content card ---------- */
-    .container {
+    .container.page-content {
+        width: calc(100% - 64px);
+        max-width: 1600px;
         background-color: #ffffff;
-        padding: 40px;
+        padding: 44px 56px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        margin-top: -36px;
-        margin-bottom: 40px;
+        margin: -36px auto 40px;
         position: relative;
         z-index: 2;
+        box-sizing: border-box;
     }
 
     h4 {
@@ -287,6 +289,8 @@
     }
 
     figure img {
+        width: 100%;
+        max-width: 1400px;
         margin-bottom: 10px;
     }
 
@@ -328,7 +332,7 @@
 
     .dataset-species-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 15px;
     }
 
@@ -338,7 +342,7 @@
 
     .dataset-sample img {
         width: 100%;
-        max-width: 200px;
+        max-width: 340px;
         height: auto;
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -369,6 +373,14 @@
     code {
         font-family: 'Courier New', monospace;
         font-size: 0.9em;
+    }
+
+    pre > code {
+        display: block;
+        padding: 0;
+        white-space: pre-wrap;
+        word-break: break-word;
+        overflow-wrap: anywhere;
     }
 
     .site-footer {
@@ -427,9 +439,10 @@
             height: 78px;
             padding: 9px;
         }
-        .container {
+        .container.page-content {
+            width: calc(100% - 24px);
             padding: 24px 18px;
-            margin-top: -20px;
+            margin: -20px auto 24px;
         }
         .dataset-species-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -534,7 +547,7 @@
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <div class="container">
+  <div class="container page-content">
 
 <div class="section">
        <h5>Abstract</h5>
