@@ -100,31 +100,31 @@
         z-index: 1;
         text-align: center;
         color: #ffffff;
-        max-width: 1250px;
+        max-width: 1700px;
         width: 100%;
         margin: 0 auto;
     }
 
     .hero-content h1 {
-        font-size: 2.6em;
+        font-size: 5.2em;
         font-weight: 700;
-        line-height: 1.25;
-        margin: 0 auto 18px;
-        max-width: 1000px;
+        line-height: 1.15;
+        margin: 0 auto 28px;
+        max-width: 1700px;
         color: #ffffff;
         text-shadow: 2px 2px 6px rgba(0,0,0,0.45);
     }
 
     .hero-content .venue {
         display: inline-block;
-        font-size: 0.95em;
+        font-size: 1.9em;
         letter-spacing: 0.02em;
         color: #ffffff;
         background: rgba(255,255,255,0.14);
         border: 1px solid rgba(255,255,255,0.35);
         border-radius: 999px;
-        padding: 6px 16px;
-        margin-bottom: 26px;
+        padding: 10px 28px;
+        margin-bottom: 36px;
         text-decoration: none;
         backdrop-filter: blur(6px);
     }
@@ -134,10 +134,10 @@
     }
 
     .hero-content .authors {
-        font-size: 1.05em;
-        line-height: 1.8;
+        font-size: 2.1em;
+        line-height: 1.6;
         color: #ffffff;
-        margin-bottom: 18px;
+        margin-bottom: 28px;
         text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     }
 
@@ -152,17 +152,17 @@
     }
 
     .hero-content .affiliations {
-        font-size: 0.9em;
+        font-size: 1.8em;
         color: #eef2f5;
-        line-height: 1.7;
-        margin-bottom: 14px;
+        line-height: 1.6;
+        margin-bottom: 24px;
         text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     }
 
     .hero-content .correspondence {
-        font-size: 0.9em;
+        font-size: 1.8em;
         color: #eef2f5;
-        margin-bottom: 34px;
+        margin-bottom: 44px;
         text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     }
 
@@ -172,10 +172,10 @@
 
     /* ---------- Materials: six uniform tiles ---------- */
     .hero-materials h3 {
-        font-size: 1.35em;
+        font-size: 2.7em;
         font-weight: 600;
         color: #ffffff;
-        margin-bottom: 18px;
+        margin-bottom: 24px;
         text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     }
 
@@ -395,8 +395,21 @@
     }
 
     /* ---------- Responsive ---------- */
-    @media (max-width: 900px) {
+    @media (max-width: 1200px) {
         .hero-content h1 {
+            font-size: 3.6em;
+        }
+        .hero-content .venue {
+            font-size: 1.4em;
+        }
+        .hero-content .authors {
+            font-size: 1.5em;
+        }
+        .hero-content .affiliations,
+        .hero-content .correspondence {
+            font-size: 1.25em;
+        }
+        .hero-materials h3 {
             font-size: 2em;
         }
     }
@@ -416,15 +429,22 @@
             padding: 36px 16px 48px;
         }
         .hero-content h1 {
-            font-size: 1.55em;
+            font-size: 1.7em;
+        }
+        .hero-content .venue {
+            font-size: 0.95em;
+            padding: 6px 16px;
         }
         .hero-content .authors {
-            font-size: 0.9em;
+            font-size: 0.95em;
             line-height: 1.7;
         }
         .hero-content .affiliations,
         .hero-content .correspondence {
-            font-size: 0.8em;
+            font-size: 0.85em;
+        }
+        .hero-materials h3 {
+            font-size: 1.35em;
         }
         .materials-grid {
             gap: 16px 14px;
